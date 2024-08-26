@@ -1,4 +1,0 @@
-This is a Brave Rewards publisher verification file.
-
-Domain: plcsimulator.online
-Token: 8a3652abc49279a6253319fe5314237af3bca1801df733bd4d0186a7bbe89f9c
