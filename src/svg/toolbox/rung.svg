@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
+    <title>Add rung</title>
+    <line x1="12" y1="16" x2="12" y2="64" stroke="#000" strokeWidth="8" />
+    <line x1="8" y1="40" x2="68" y2="40" stroke="#000" strokeWidth="8" />
+    <line x1="68" y1="16" x2="68" y2="64" stroke="#000" strokeWidth="8" />
+</svg>

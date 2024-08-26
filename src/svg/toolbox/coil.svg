@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" className="symbol">
+    <title>Add coil</title>
+    <line y1="40" x2="20" y2="40" stroke="#000" strokeWidth="8" />
+    <line x1="60" y1="40" x2="80" y2="40" stroke="#000" strokeWidth="8" />
+    <circle cx="40" cy="40" r="20" stroke="#000" strokeWidth="8" fill="transparent" />
+</svg>

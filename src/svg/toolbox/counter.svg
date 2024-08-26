@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
+    <title>Add counter function block</title>
+    <text font="18px sans-serif" fontWeight="bold" x="24" y="42" dominantBaseline="middle" textAnchor="middle" opacity="0.8">
+        0
+    </text>
+    <text font="18px sans-serif" fontWeight="bold" x="40" y="42" dominantBaseline="middle" textAnchor="middle" opacity="0.8">
+        0
+    </text>
+    <text font="18px sans-serif" fontWeight="bold" x="56" y="34" dominantBaseline="middle" textAnchor="middle" opacity="0.8">
+        6
+    </text>
+    <text font="18px sans-serif" fontWeight="bold" x="56" y="50" dominantBaseline="middle" textAnchor="middle" opacity="0.8">
+        7
+    </text>
+    <rect x="14" y="24" width="52" height="32" fillOpacity="0" stroke="#000" strokeWidth="4" />
+    <line x1="32" x2="32" y1="24" y2="56" opacity="0.8" stroke="#000" strokeWidth="2" />
+    <line x1="48" x2="48" y1="24" y2="56" opacity="0.8" stroke="#000" strokeWidth="2" />
+    <line y1="40" x2="14" y2="40" stroke="#000" strokeWidth="8" />
+    <line x1="66" y1="40" x2="80" y2="40" stroke="#000" strokeWidth="8" />
+</svg>

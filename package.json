@@ -1,0 +1,70 @@
+{
+  "name": "plc-simulator",
+  "homepage": "https://app.plcsimulator.online/",
+  "version": "1.6.2",
+  "private": true,
+  "dependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@mui/icons-material": "^5.14.16",
+    "@mui/lab": "^5.0.0-alpha.152",
+    "@mui/material": "^5.14.17",
+    "@mui/styles": "^5.14.17",
+    "@sentry/react": "^8.7.0",
+    "firebase": "^9.19.1",
+    "immer": "^9.0.21",
+    "localforage": "^1.9.0",
+    "nanoid": "^5.0.5",
+    "react": "^18.2.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
+    "react-dom": "^18.2.0",
+    "react-firebase-hooks": "3.0.5",
+    "react-icons": "^4.11.0",
+    "react-redux": "^8.1.3",
+    "react-scripts": "^5.0.1",
+    "react-select": "^5.8.0",
+    "redux": "^4.0.5",
+    "redux-persist": "^6.0.0",
+    "styled-components": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.10",
+    "@types/react": "^18.2.36",
+    "@types/react-dom": "^18.2.14",
+    "@types/react-redux": "^7.1.29",
+    "@types/styled-components": "^5.1.29",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
+    "eslint": "^8.53.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-react": "^7.33.2",
+    "typescript": "^5.2.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": " react-scripts build && firebase deploy",
+    "deploy-beta": "react-scripts build && firebase hosting:channel:deploy beta",
+    "set-release-env": "ts-node set-release-env.ts"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

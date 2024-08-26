@@ -1,0 +1,5 @@
+export const BLOCK = "BLOCK"
+export const WIRE = "WIRE"
+export const BRANCH = "BRANCH"
+export const RUNG = "RUNG"
+export const TOOL_RUNG = "TOOL_RUNG"
