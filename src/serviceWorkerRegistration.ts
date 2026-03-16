@@ -7,7 +7,7 @@ type Config = {
 };
 
 export function register(config?: Config) {
-  registerSW({
+  const updateSW = registerSW({
     onRegisteredSW(_swUrl, registration) {
       if (registration) {
         console.log('Service worker registered.');
@@ -18,7 +18,7 @@ export function register(config?: Config) {
     },
     onNeedRefresh() {
       if (confirm('A new version of the app is available. Do you want to refresh the page?')) {
-        window.location.reload();
+        updateSW(true);
       }
       config?.onUpdate?.();
     },
