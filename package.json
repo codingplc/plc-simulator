@@ -3,6 +3,7 @@
   "homepage": "https://app.plcsimulator.online/",
   "version": "1.6.5",
   "private": true,
+  "packageManager": "pnpm@10.6.2",
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
@@ -46,10 +47,11 @@
     "vite-plugin-svgr": "^4.3.0"
   },
   "scripts": {
+    "dev": "vite",
     "start": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "predeploy": "npm run build",
+    "predeploy": "pnpm run build",
     "deploy": "tsc && vite build && firebase deploy",
     "deploy-beta": "tsc && vite build && firebase hosting:channel:deploy beta",
     "set-release-env": "ts-node set-release-env.ts"
@@ -64,6 +66,12 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "protobufjs"
     ]
   }
 }

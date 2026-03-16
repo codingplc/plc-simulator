@@ -18,13 +18,13 @@ cd plc-simulator
 ### Install Dependencies:
 
 ```bash
-yarn install
+pnpm install
 ```
 
 ### Run the Simulator:
 
 ```bash
-yarn start
+pnpm dev
 ```
 
 ## Contributing
