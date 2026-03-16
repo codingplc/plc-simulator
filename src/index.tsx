@@ -1,13 +1,20 @@
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import * as Sentry from '@sentry/react';
-import App from './App';
-import { createRoot } from 'react-dom/client';
-import React from 'react';
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+import * as Sentry from "@sentry/react";
+import posthog from "posthog-js";
+import App from "./App";
+import { createRoot } from "react-dom/client";
+import React from "react";
 
-import.meta.env.MODE === 'production' &&
+posthog.init("phc_Lu1p6d28pqkBdam80PJcMQ3thC2CzuWMsXEWRHO10yX", {
+  api_host: "https://h.rungs.dev",
+  person_profiles: "always",
+  defaults: "2026-01-30",
+});
+
+import.meta.env.MODE === "production" &&
   Sentry.init({
-    release: 'plc-simulator@' + import.meta.env.VITE_VERSION,
-    dsn: 'https://32c5d1333234467f9bbd89ffe4953fbf@o4505075727990784.ingest.sentry.io/4505075729629184',
+    release: "plc-simulator@" + import.meta.env.VITE_VERSION,
+    dsn: "https://32c5d1333234467f9bbd89ffe4953fbf@o4505075727990784.ingest.sentry.io/4505075729629184",
     integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
     // Performance Monitoring
     tracesSampleRate: 0.2,
@@ -16,7 +23,7 @@ import.meta.env.MODE === 'production' &&
     replaysOnErrorSampleRate: 1.0,
   });
 
-const container = document.getElementById('root') as HTMLElement;
+const container = document.getElementById("root") as HTMLElement;
 const root = createRoot(container);
 root.render(
   <React.StrictMode>
