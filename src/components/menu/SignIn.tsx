@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { usePostHog } from '@posthog/react';
 import { auth } from '../../helpers/firebase';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -17,6 +18,7 @@ interface Props {
 
 export default function SignIn(props: Props) {
   const { handleFormChange } = props;
+  const posthog = usePostHog();
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState('');
@@ -26,7 +28,11 @@ export default function SignIn(props: Props) {
     if (emailRef.current && passwordRef.current) {
       auth
         .signInWithEmailAndPassword(emailRef.current.value, passwordRef.current.value)
-        .then()
+        .then((result) => {
+          if (result.user) {
+            posthog.identify(result.user.uid, { email: result.user.email });
+          }
+        })
         .catch((e) => {
           setError(e.message);
         });

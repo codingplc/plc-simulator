@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { usePostHog } from '@posthog/react';
 import { auth } from '../../helpers/firebase';
 import {
   Alert,
@@ -20,6 +21,7 @@ interface Props {
 
 export default function SignUp(props: Props) {
   const { handleFormChange } = props;
+  const posthog = usePostHog();
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState('');
@@ -30,7 +32,11 @@ export default function SignUp(props: Props) {
     if (emailRef.current && passwordRef.current) {
       auth
         .createUserWithEmailAndPassword(emailRef.current.value, passwordRef.current.value)
-        .then()
+        .then((result) => {
+          if (result.user) {
+            posthog.identify(result.user.uid, { email: result.user.email });
+          }
+        })
         .catch((e) => {
           setError(e.message);
         });
