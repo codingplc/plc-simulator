@@ -1,12 +1,13 @@
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import * as Sentry from "@sentry/react";
 import posthog from "posthog-js";
+import { PostHogProvider } from "@posthog/react";
 import App from "./App";
 import { createRoot } from "react-dom/client";
 import React from "react";
 
 posthog.init("phc_Lu1p6d28pqkBdam80PJcMQ3thC2CzuWMsXEWRHO10yX", {
-  api_host: "https://h.rungs.dev",
+  api_host: "https://eu.i.posthog.com",
   person_profiles: "always",
   defaults: "2026-01-30",
 });
@@ -27,7 +28,9 @@ const container = document.getElementById("root") as HTMLElement;
 const root = createRoot(container);
 root.render(
   <React.StrictMode>
-    <App />
+    <PostHogProvider client={posthog}>
+      <App />
+    </PostHogProvider>
   </React.StrictMode>,
 );
 

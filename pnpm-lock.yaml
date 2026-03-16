@@ -26,6 +26,9 @@ importers:
       '@mui/styles':
         specifier: ^5.14.17
         version: 5.18.0(@types/react@18.3.28)(react@18.3.1)
+      '@posthog/react':
+        specifier: ^1.8.2
+        version: 1.8.2(@types/react@18.3.28)(posthog-js@1.360.2)(react@18.3.1)
       '@sentry/react':
         specifier: ^8.7.0
         version: 8.55.0(react@18.3.1)
@@ -1193,6 +1196,16 @@ packages:
 
   '@posthog/core@1.23.4':
     resolution: {integrity: sha512-gSM1gnIuw5UOBUOTz0IhCTH8jOHoFr5rzSDb5m7fn9ofLHvz3boZT1L1f+bcuk+mvzNJfrJ3ByVQGKmUQnKQ8g==}
+
+  '@posthog/react@1.8.2':
+    resolution: {integrity: sha512-KzUuXIcAR8fAjU7IeDq+XfEcUTNvzgEGB381WRrFUUsu7jFTcKZZ6crx/ukHRCzTnoEuy5EJDkL7b7sJecPlCg==}
+    peerDependencies:
+      '@types/react': '>=16.8.0'
+      posthog-js: '>=1.257.2'
+      react: '>=16.8.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
 
   '@posthog/types@1.360.2':
     resolution: {integrity: sha512-U48CbtmX5kETZvWjaJVlublSA1aLV99m71TQtgxWksBMXINS/3C7j+KqlMO6wH7SuaEZQnjaxh1KYGH4nRCaaA==}
@@ -4931,6 +4944,13 @@ snapshots:
   '@posthog/core@1.23.4':
     dependencies:
       cross-spawn: 7.0.6
+
+  '@posthog/react@1.8.2(@types/react@18.3.28)(posthog-js@1.360.2)(react@18.3.1)':
+    dependencies:
+      posthog-js: 1.360.2
+      react: 18.3.1
+    optionalDependencies:
+      '@types/react': 18.3.28
 
   '@posthog/types@1.360.2': {}
 
