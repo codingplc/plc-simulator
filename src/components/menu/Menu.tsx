@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { usePostHog } from '@posthog/react';
 
 import { Store } from '../../interface';
 import { UNDO, REDO, LOAD_EMPTY, LOAD_SAMPLE } from '../../store/types';
@@ -28,9 +29,13 @@ export default function Menu() {
   const [user] = useAuthState(auth);
   const online = useOnline();
   const dispatch = useDispatch();
+  const posthog = usePostHog();
 
   const dispatchAction = (actionType: string) => {
     logEvent('load_diagram', { action: actionType });
+    if (actionType === LOAD_EMPTY) {
+      posthog.capture('new_diagram');
+    }
     dispatch({ type: actionType });
     setPopupOpen(false);
   };
