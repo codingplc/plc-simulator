@@ -4,9 +4,9 @@ import App from './App';
 import { createRoot } from 'react-dom/client';
 import React from 'react';
 
-process.env.NODE_ENV === 'production' &&
+import.meta.env.MODE === 'production' &&
   Sentry.init({
-    release: 'plc-simulator@' + process.env.REACT_APP_VERSION,
+    release: 'plc-simulator@' + import.meta.env.VITE_VERSION,
     dsn: 'https://32c5d1333234467f9bbd89ffe4953fbf@o4505075727990784.ingest.sentry.io/4505075729629184',
     integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
     // Performance Monitoring
@@ -24,11 +24,4 @@ root.render(
   </React.StrictMode>,
 );
 
-serviceWorkerRegistration.register({
-  onUpdate: (registration) => {
-    if (confirm('A new version of the app is available. Do you want to refresh the page?')) {
-      registration.waiting?.postMessage({ type: 'SKIP_WAITING' });
-      window.location.reload();
-    }
-  },
-});
+serviceWorkerRegistration.register();

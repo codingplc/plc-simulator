@@ -50,20 +50,6 @@
       content="https://cdn.cp.adobe.io/content/2/dcx/8b238225-2e7f-4b93-bf15-f08ebdcb69a8/rendition/preview.jpg/version/2/format/jpg/dimension/width/size/1200"
     />
 
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="./manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
@@ -126,7 +112,6 @@
       crossorigin="anonymous"
     ></script>
   </head>
-  <style></style>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -134,5 +119,6 @@
       <div class="loader" style="margin-top: 1rem"></div>
       <p class="page-info">Loading PLC Simulator...</p>
     </div>
+    <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>
