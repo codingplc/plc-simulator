@@ -8,8 +8,10 @@ import React from "react";
 
 posthog.init("phc_Lu1p6d28pqkBdam80PJcMQ3thC2CzuWMsXEWRHO10yX", {
   api_host: "https://eu.i.posthog.com",
+  autocapture: false,
   person_profiles: "always",
   defaults: "2026-01-30",
+  capture_performance: false,
 });
 
 import.meta.env.MODE === "production" &&
