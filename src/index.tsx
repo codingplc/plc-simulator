@@ -5,6 +5,7 @@ import { PostHogProvider } from "@posthog/react";
 import App from "./App";
 import { createRoot } from "react-dom/client";
 import React from "react";
+import { version } from "../package.json";
 
 posthog.init("phc_Lu1p6d28pqkBdam80PJcMQ3thC2CzuWMsXEWRHO10yX", {
   api_host: "https://eu.i.posthog.com",
@@ -16,7 +17,7 @@ posthog.init("phc_Lu1p6d28pqkBdam80PJcMQ3thC2CzuWMsXEWRHO10yX", {
 
 import.meta.env.MODE === "production" &&
   Sentry.init({
-    release: "plc-simulator@" + import.meta.env.VITE_VERSION,
+    release: `plc-simulator@${version}`,
     dsn: "https://32c5d1333234467f9bbd89ffe4953fbf@o4505075727990784.ingest.sentry.io/4505075729629184",
     integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
     // Performance Monitoring
