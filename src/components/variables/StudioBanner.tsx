@@ -1,22 +1,78 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useFeatureFlagVariantKey, usePostHog } from "@posthog/react";
 import styled, { keyframes } from "styled-components";
 
 import { BORDER_SIZE } from "../../consts/variableTableStyles";
 import { VAR_TABLE_BORDER } from "../../consts/colors";
 
 import ladderImg from "../../images/ladder-logic-editor.png";
-import simulationImg from "../../images/real-time-simulation.png";
-import saveImg from "../../images/save-project-locally.png";
 import stImg from "../../images/structured-text-editor.png";
 import trendsImg from "../../images/trends-input-outputs.png";
+import saveImg from "../../images/save-project-locally.png";
 
-const SLIDES = [
-  { src: ladderImg, feature: "Ladder Logic Editor" },
-  { src: stImg, feature: "Structured Text Editor" },
-  { src: simulationImg, feature: "Real-Time Simulation" },
-  { src: trendsImg, feature: "Trends & I/O Monitoring" },
-  { src: saveImg, feature: "Save Projects Locally" },
-];
+const FEATURE_FLAG = "studio-banner-variant";
+const TARGET_BASE_URL = "https://studio.rungs.dev";
+
+const buildTargetUrl = (variant: string): string => {
+  const params = new URLSearchParams({
+    utm_source: "plcsimulator",
+    utm_medium: "banner",
+    utm_campaign: "studio-feature",
+    utm_content: variant,
+  });
+  return `${TARGET_BASE_URL}/?${params.toString()}`;
+};
+
+type ImageSlide = { kind: "image"; src: string; caption: string };
+type ChatSlide = { kind: "chat"; question: string; answer: string };
+type Slide = ImageSlide | ChatSlide;
+
+type Variant = {
+  feature: string;
+  heading: string;
+  cta: string;
+  slide: Slide;
+};
+
+const VARIANTS: Record<string, Variant> = {
+  ladder: {
+    feature: "Studio",
+    heading: "Modern ladder editor",
+    cta: "open studio.rungs.dev →",
+    slide: { kind: "image", src: ladderImg, caption: "Ladder Logic Editor" },
+  },
+  st: {
+    feature: "Studio",
+    heading: "Write your PLC in code",
+    cta: "open studio.rungs.dev →",
+    slide: { kind: "image", src: stImg, caption: "Structured Text Editor" },
+  },
+  trends: {
+    feature: "Studio",
+    heading: "Watch your I/O live",
+    cta: "open studio.rungs.dev →",
+    slide: { kind: "image", src: trendsImg, caption: "Trends & I/O Monitoring" },
+  },
+  save: {
+    feature: "Studio",
+    heading: "Save projects locally",
+    cta: "open studio.rungs.dev →",
+    slide: { kind: "image", src: saveImg, caption: "Save Projects Locally" },
+  },
+  ai: {
+    feature: "✨ Relay AI Assistant",
+    heading: "Stuck? Ask Relay.",
+    cta: "try Relay AI →",
+    slide: {
+      kind: "chat",
+      question: "Does my ladder logic look correct?",
+      answer:
+        "Rung 1: `XIC` needs BOOL, not REAL. Fix the type in the Tag editor.",
+    },
+  },
+};
+
+const DEFAULT_VARIANT = "ladder";
 
 const fadeIn = keyframes`
   from { opacity: 0; }
@@ -25,13 +81,13 @@ const fadeIn = keyframes`
 const Container = styled.div`
   position: relative;
 `;
-const Wrapper = styled.a`
+const Wrapper = styled.a<{ $aspect: string }>`
   display: flex;
   border-top: ${BORDER_SIZE} solid ${VAR_TABLE_BORDER};
   text-decoration: none;
   overflow: hidden;
-  aspect-ratio: 4 / 1;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  aspect-ratio: ${(p) => p.$aspect};
+  background: linear-gradient(135deg, #0f172a 0%, #1e2533 100%);
   container-type: size;
 
   :hover .cta {
@@ -72,6 +128,7 @@ const Right = styled.div`
   width: 50%;
   position: relative;
   overflow: hidden;
+  container-type: size;
 `;
 const Feature = styled.span`
   font-size: 3.6cqi;
@@ -89,6 +146,62 @@ const SlideImg = styled.img`
   display: block;
   animation: ${fadeIn} 0.5s ease both;
 `;
+
+const ChatPanel = styled.div`
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  background: #1e2533;
+  animation: ${fadeIn} 0.5s ease both;
+`;
+const UserBubble = styled.div`
+  align-self: flex-end;
+  max-width: 92%;
+  background: #6ea2f7;
+  color: #000;
+  font-size: 12px;
+  line-height: 1.35;
+  padding: 4px 8px;
+  border-radius: 0;
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+`;
+const AssistantText = styled.div`
+  align-self: flex-start;
+  color: #d4d4d4;
+  font-size: 12px;
+  line-height: 1.45;
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+
+  code {
+    background: #2a3344;
+    color: #e2e8f0;
+    padding: 0.05em 0.3em;
+    border-radius: 3px;
+    font-size: 0.95em;
+  }
+`;
+
+const renderInline = (text: string): React.ReactNode => {
+  const parts = text.split(/(`[^`]+`)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("`") && part.endsWith("`")) {
+      return <code key={i}>{part.slice(1, -1)}</code>;
+    }
+    return <React.Fragment key={i}>{part}</React.Fragment>;
+  });
+};
 
 const DISMISS_KEY = "studio-banner-dismissed";
 const DISMISS_DAYS = 7;
@@ -135,40 +248,70 @@ const CloseBtn = styled.button`
   }
 `;
 
+const getOverrideVariantKey = (): string | null => {
+  if (typeof window === "undefined") return null;
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const override = params.get("banner");
+    if (override && override in VARIANTS) return override;
+  } catch {
+    // Ignore URL parsing failures.
+  }
+  return null;
+};
+
+const resolveVariantKey = (raw: string | boolean | undefined): string => {
+  const override = getOverrideVariantKey();
+  if (override) return override;
+  if (typeof raw === "string" && raw in VARIANTS) return raw;
+  return DEFAULT_VARIANT;
+};
+
 const StudioBanner: React.FC = () => {
-  const [slideIndex, setSlideIndex] = useState(0);
+  const posthog = usePostHog();
+  const variantKeyRaw = useFeatureFlagVariantKey(FEATURE_FLAG);
+  const variantKey = resolveVariantKey(variantKeyRaw);
+  const variant = VARIANTS[variantKey];
+
   const [dismissed, setDismissed] = useState(() => isDismissed());
 
-  useEffect(() => {
-    if (dismissed) return;
-    const timer = setInterval(() => {
-      setSlideIndex((i) => (i + 1) % SLIDES.length);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, [dismissed]);
-
   if (dismissed) return null;
+
+  const { slide } = variant;
+  const aspect = "4 / 1";
 
   return (
     <Container>
       <Wrapper
-        href="https://studio.rungs.dev"
+        $aspect={aspect}
+        href={buildTargetUrl(variantKey)}
         target="_blank"
         rel="noopener"
         aria-label="open the new PLC simulator at studio.rungs.dev"
+        onClick={() => {
+          posthog?.capture("studio_banner_click", { variant: variantKey });
+        }}
       >
         <Left>
-          <Feature>{SLIDES[slideIndex].feature}</Feature>
-          <Heading>Try new features</Heading>
-          <CTA className="cta">open studio.rungs.dev &rarr;</CTA>
+          <Feature>{variant.feature}</Feature>
+          <Heading>{variant.heading}</Heading>
+          <CTA className="cta">{variant.cta}</CTA>
         </Left>
         <Right>
-          <SlideImg key={slideIndex} src={SLIDES[slideIndex].src} alt={SLIDES[slideIndex].feature} />
+          {slide.kind === "image" ? (
+            <SlideImg src={slide.src} alt={slide.caption} />
+          ) : (
+            <ChatPanel>
+              <UserBubble>{slide.question}</UserBubble>
+              <AssistantText>{renderInline(slide.answer)}</AssistantText>
+            </ChatPanel>
+          )}
         </Right>
       </Wrapper>
       <CloseBtn
         aria-label="Dismiss banner"
         onClick={() => {
+          posthog?.capture("studio_banner_dismissed", { variant: variantKey });
           setDismissedTimestamp();
           setDismissed(true);
         }}

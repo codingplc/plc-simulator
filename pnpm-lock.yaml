@@ -26,12 +26,18 @@ importers:
       '@mui/styles':
         specifier: ^5.14.17
         version: 5.18.0(@types/react@18.3.28)(react@18.3.1)
+      '@mui/system':
+        specifier: 5.18.0
+        version: 5.18.0(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.28)(react@18.3.1))(@types/react@18.3.28)(react@18.3.1))(@types/react@18.3.28)(react@18.3.1)
       '@posthog/react':
         specifier: ^1.8.2
         version: 1.8.2(@types/react@18.3.28)(posthog-js@1.360.2)(react@18.3.1)
       '@sentry/react':
         specifier: ^8.7.0
         version: 8.55.0(react@18.3.1)
+      dnd-core:
+        specifier: 16.0.1
+        version: 16.0.1
       firebase:
         specifier: ^9.19.1
         version: 9.23.0

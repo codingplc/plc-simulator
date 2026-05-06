@@ -11,8 +11,10 @@
     "@mui/lab": "^5.0.0-alpha.152",
     "@mui/material": "^5.14.17",
     "@mui/styles": "^5.14.17",
+    "@mui/system": "5.18.0",
     "@posthog/react": "^1.8.2",
     "@sentry/react": "^8.7.0",
+    "dnd-core": "16.0.1",
     "firebase": "^9.19.1",
     "immer": "^9.0.21",
     "localforage": "^1.9.0",
@@ -72,6 +74,7 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "core-js",
       "esbuild",
       "protobufjs"
     ]
