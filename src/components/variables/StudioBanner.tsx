@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useFeatureFlagVariantKey, usePostHog } from "@posthog/react";
 import styled, { keyframes } from "styled-components";
 
@@ -6,73 +6,83 @@ import { BORDER_SIZE } from "../../consts/variableTableStyles";
 import { VAR_TABLE_BORDER } from "../../consts/colors";
 
 import ladderImg from "../../images/ladder-logic-editor.png";
-import stImg from "../../images/structured-text-editor.png";
-import trendsImg from "../../images/trends-input-outputs.png";
-import saveImg from "../../images/save-project-locally.png";
 
-const FEATURE_FLAG = "studio-banner-variant";
-const TARGET_BASE_URL = "https://studio.rungs.dev";
+// Destination experiment: two tailored banners. The `studio` arm pitches the
+// Studio app (ladder screenshot); the `learn` arm pitches Learn (passing
+// exercise tests). Each has its own copy, right-side panel and link, so this
+// measures the whole package (banner + destination) per arm.
+// Flag lives in PostHog project 142335. Fallback / kill switch = "studio".
+const FEATURE_FLAG = "plcsim-banner-destination";
 
-const buildTargetUrl = (variant: string): string => {
-  const params = new URLSearchParams({
-    utm_source: "plcsimulator",
-    utm_medium: "banner",
-    utm_campaign: "studio-feature",
-    utm_content: variant,
-  });
-  return `${TARGET_BASE_URL}/?${params.toString()}`;
-};
+type Variant = "studio" | "learn";
+const DEFAULT_VARIANT: Variant = "studio";
 
-type ImageSlide = { kind: "image"; src: string; caption: string };
-type ChatSlide = { kind: "chat"; question: string; answer: string };
-type Slide = ImageSlide | ChatSlide;
+type RightPanel =
+  | { kind: "image"; src: string; caption: string }
+  | { kind: "tests"; title: string; items: string[]; summary: string };
 
-type Variant = {
+type VariantContent = {
   feature: string;
   heading: string;
   cta: string;
-  slide: Slide;
+  href: string;
+  right: RightPanel;
 };
 
-const VARIANTS: Record<string, Variant> = {
-  ladder: {
-    feature: "Studio",
-    heading: "Modern ladder editor",
-    cta: "open studio.rungs.dev →",
-    slide: { kind: "image", src: ladderImg, caption: "Ladder Logic Editor" },
+const CONTENT: Record<Variant, VariantContent> = {
+  studio: {
+    feature: "studio.rungs.dev",
+    heading: "Next-generation PLC simulator online",
+    cta: "Open Studio →",
+    href: "https://studio.rungs.dev/",
+    right: { kind: "image", src: ladderImg, caption: "Ladder Logic Editor" },
   },
-  st: {
-    feature: "Studio",
-    heading: "Write your PLC in code",
-    cta: "open studio.rungs.dev →",
-    slide: { kind: "image", src: stImg, caption: "Structured Text Editor" },
-  },
-  trends: {
-    feature: "Studio",
-    heading: "Watch your I/O live",
-    cta: "open studio.rungs.dev →",
-    slide: { kind: "image", src: trendsImg, caption: "Trends & I/O Monitoring" },
-  },
-  save: {
-    feature: "Studio",
-    heading: "Save projects locally",
-    cta: "open studio.rungs.dev →",
-    slide: { kind: "image", src: saveImg, caption: "Save Projects Locally" },
-  },
-  ai: {
-    feature: "✨ Relay AI Assistant",
-    heading: "Stuck? Ask Relay.",
-    cta: "try Relay AI →",
-    slide: {
-      kind: "chat",
-      question: "Does my ladder logic look correct?",
-      answer:
-        "Rung 1: `XIC` needs BOOL, not REAL. Fix the type in the Tag editor.",
+  learn: {
+    feature: "learn.rungs.dev",
+    heading: "Learn PLC programming, the practical way",
+    cta: "Start free exercises →",
+    href: "https://learn.rungs.dev/",
+    right: {
+      kind: "tests",
+      title: "ToggleLamp",
+      items: ["rising edge toggles", "holds on release", "no double-toggle"],
+      summary: "3 passed, 0 failed",
     },
   },
 };
 
-const DEFAULT_VARIANT = "ladder";
+const buildTargetUrl = (variant: Variant): string => {
+  const base = CONTENT[variant].href;
+  const params = new URLSearchParams({
+    utm_source: "plcsimulator.online",
+    utm_medium: "banner",
+    utm_campaign: "plcsim_banner_dest",
+    utm_content: variant,
+  });
+  const separator = base.includes("?") ? "&" : "?";
+  return `${base}${separator}${params.toString()}`;
+};
+
+// Dev-only QA override: ?banner=studio|learn. Stripped from production builds so
+// it can't skew the live experiment.
+const getOverrideVariant = (): Variant | null => {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = new URLSearchParams(window.location.search).get("banner");
+    if (raw === "studio" || raw === "learn") return raw;
+  } catch {
+    // Ignore URL parsing failures.
+  }
+  return null;
+};
+
+const resolveVariant = (raw: string | boolean | undefined): Variant => {
+  if (import.meta.env.DEV) {
+    const override = getOverrideVariant();
+    if (override) return override;
+  }
+  return raw === "learn" || raw === "studio" ? raw : DEFAULT_VARIANT;
+};
 
 const fadeIn = keyframes`
   from { opacity: 0; }
@@ -81,13 +91,13 @@ const fadeIn = keyframes`
 const Container = styled.div`
   position: relative;
 `;
-const Wrapper = styled.a<{ $aspect: string }>`
+const Wrapper = styled.a`
   display: flex;
   border-top: ${BORDER_SIZE} solid ${VAR_TABLE_BORDER};
   text-decoration: none;
   overflow: hidden;
-  aspect-ratio: ${(p) => p.$aspect};
-  background: linear-gradient(135deg, #0f172a 0%, #1e2533 100%);
+  aspect-ratio: 4 / 1;
+  background: linear-gradient(135deg, #14171d 0%, #1d222b 100%);
   container-type: size;
 
   :hover .cta {
@@ -105,10 +115,16 @@ const Left = styled.div`
   gap: 8%;
   overflow: hidden;
 `;
+const TextGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8cqi;
+`;
 const Heading = styled.span`
   font-size: 3.6cqi;
   font-weight: 800;
-  color: #f1f5f9;
+  color: oklch(90% 0.007 247.896);
   line-height: 1.2;
   text-align: center;
 `;
@@ -133,8 +149,8 @@ const Right = styled.div`
 const Feature = styled.span`
   font-size: 3.6cqi;
   font-weight: 700;
-  color: #93c5fd;
-  line-height: 1.2;
+  color: #66b3ff;
+  line-height: 1;
   text-align: center;
 `;
 const SlideImg = styled.img`
@@ -147,61 +163,52 @@ const SlideImg = styled.img`
   animation: ${fadeIn} 0.5s ease both;
 `;
 
-const ChatPanel = styled.div`
+const TestPanel = styled.div`
   position: absolute;
   inset: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 8px;
-  padding: 12px 14px;
-  background: #1e2533;
+  gap: 3cqh;
+  padding: 6% 8%;
+  background: oklch(12.9% 0.042 264.695);
+  font-family: "Roboto Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
   animation: ${fadeIn} 0.5s ease both;
 `;
-const UserBubble = styled.div`
-  align-self: flex-end;
-  max-width: 92%;
-  background: #6ea2f7;
-  color: #000;
-  font-size: 12px;
-  line-height: 1.35;
-  padding: 4px 8px;
-  border-radius: 0;
-  font-family:
-    ui-monospace,
-    SFMono-Regular,
-    Menlo,
-    monospace;
+const Marker = styled.span`
+  color: oklch(62.7% 0.265 303.9);
 `;
-const AssistantText = styled.div`
-  align-self: flex-start;
-  color: #d4d4d4;
-  font-size: 12px;
-  line-height: 1.45;
-  font-family:
-    ui-monospace,
-    SFMono-Regular,
-    Menlo,
-    monospace;
-
-  code {
-    background: #2a3344;
-    color: #e2e8f0;
-    padding: 0.05em 0.3em;
-    border-radius: 3px;
-    font-size: 0.95em;
-  }
+const TestTitle = styled.div`
+  font-size: 9cqh;
+  font-weight: 700;
+  color: oklch(90% 0.007 247.896);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
-
-const renderInline = (text: string): React.ReactNode => {
-  const parts = text.split(/(`[^`]+`)/g);
-  return parts.map((part, i) => {
-    if (part.startsWith("`") && part.endsWith("`")) {
-      return <code key={i}>{part.slice(1, -1)}</code>;
-    }
-    return <React.Fragment key={i}>{part}</React.Fragment>;
-  });
-};
+const TestRow = styled.div`
+  display: flex;
+  align-items: baseline;
+  gap: 5%;
+  font-size: 9cqh;
+  line-height: 1.2;
+  color: oklch(85% 0 0);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+const Check = styled.span`
+  color: oklch(70% 0.17 151.711);
+  font-weight: 700;
+`;
+const TestSummary = styled.div`
+  font-size: 9cqh;
+  font-weight: 700;
+  color: oklch(70% 0.17 151.711);
+  line-height: 1.2;
+  white-space: nowrap;
+`;
 
 const DISMISS_KEY = "studio-banner-dismissed";
 const DISMISS_DAYS = 7;
@@ -248,70 +255,78 @@ const CloseBtn = styled.button`
   }
 `;
 
-const getOverrideVariantKey = (): string | null => {
-  if (typeof window === "undefined") return null;
-  try {
-    const params = new URLSearchParams(window.location.search);
-    const override = params.get("banner");
-    if (override && override in VARIANTS) return override;
-  } catch {
-    // Ignore URL parsing failures.
-  }
-  return null;
-};
+// `forceVariant` pins a specific arm and disables analytics/dismissal — for
+// local preview only (see the temporary stacked render in VariableTable).
+type StudioBannerProps = { forceVariant?: Variant };
 
-const resolveVariantKey = (raw: string | boolean | undefined): string => {
-  const override = getOverrideVariantKey();
-  if (override) return override;
-  if (typeof raw === "string" && raw in VARIANTS) return raw;
-  return DEFAULT_VARIANT;
-};
-
-const StudioBanner: React.FC = () => {
+const StudioBanner: React.FC<StudioBannerProps> = ({ forceVariant }) => {
+  const preview = forceVariant !== undefined;
   const posthog = usePostHog();
-  const variantKeyRaw = useFeatureFlagVariantKey(FEATURE_FLAG);
-  const variantKey = resolveVariantKey(variantKeyRaw);
-  const variant = VARIANTS[variantKey];
+  const variantRaw = useFeatureFlagVariantKey(FEATURE_FLAG);
+  const variant = forceVariant ?? resolveVariant(variantRaw);
+  const content = CONTENT[variant];
 
   const [dismissed, setDismissed] = useState(() => isDismissed());
+  const shownFired = useRef(false);
 
-  if (dismissed) return null;
+  useEffect(() => {
+    // Fire one impression per mount, once the flag has resolved, so the
+    // recorded variant matches the link the user actually sees (and clicks).
+    if (preview || shownFired.current || isDismissed()) return;
+    if (variantRaw === undefined && !import.meta.env.DEV) return;
+    shownFired.current = true;
+    posthog?.capture("studio_banner_shown", { variant });
+  }, [preview, posthog, variant, variantRaw]);
 
-  const { slide } = variant;
-  const aspect = "4 / 1";
+  if (!preview && dismissed) return null;
+
+  const href = buildTargetUrl(variant);
+  const { right } = content;
 
   return (
     <Container>
       <Wrapper
-        $aspect={aspect}
-        href={buildTargetUrl(variantKey)}
+        href={href}
         target="_blank"
         rel="noopener"
-        aria-label="open the new PLC simulator at studio.rungs.dev"
+        aria-label={`${content.feature}: ${content.heading}`}
         onClick={() => {
-          posthog?.capture("studio_banner_click", { variant: variantKey });
+          posthog?.capture("studio_banner_click", {
+            variant,
+            destination: href,
+          });
         }}
       >
         <Left>
-          <Feature>{variant.feature}</Feature>
-          <Heading>{variant.heading}</Heading>
-          <CTA className="cta">{variant.cta}</CTA>
+          <TextGroup>
+            <Feature>{content.feature}</Feature>
+            <Heading>{content.heading}</Heading>
+          </TextGroup>
+          <CTA className="cta">{content.cta}</CTA>
         </Left>
         <Right>
-          {slide.kind === "image" ? (
-            <SlideImg src={slide.src} alt={slide.caption} />
+          {right.kind === "image" ? (
+            <SlideImg src={right.src} alt={right.caption} />
           ) : (
-            <ChatPanel>
-              <UserBubble>{slide.question}</UserBubble>
-              <AssistantText>{renderInline(slide.answer)}</AssistantText>
-            </ChatPanel>
+            <TestPanel>
+              <TestTitle>
+                <Marker>◆</Marker> {right.title}
+              </TestTitle>
+              {right.items.map((item) => (
+                <TestRow key={item}>
+                  <Check>✓</Check>
+                  <span>{item}</span>
+                </TestRow>
+              ))}
+              <TestSummary>✓ {right.summary}</TestSummary>
+            </TestPanel>
           )}
         </Right>
       </Wrapper>
       <CloseBtn
         aria-label="Dismiss banner"
         onClick={() => {
-          posthog?.capture("studio_banner_dismissed", { variant: variantKey });
+          posthog?.capture("studio_banner_dismissed", { variant });
           setDismissedTimestamp();
           setDismissed(true);
         }}
