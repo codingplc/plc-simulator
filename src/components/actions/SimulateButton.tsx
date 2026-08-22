@@ -53,7 +53,7 @@ const SimulateButton: React.FC = () => {
       timer = id;
     }
     return () => clearInterval(timer);
-  });
+  }, [simulation]);
 
   const handleClick = () => {
     logEvent('click_simulation');

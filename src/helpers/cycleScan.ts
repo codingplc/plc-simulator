@@ -6,6 +6,7 @@ import { NUMBER_MAX, NUMBER_MIN } from '../consts/variables';
 
 export const cycleScan = (draft: Store): Store => {
   const { branches, elements, rungs } = draft;
+  const executedTimers = new Set<string>();
   const branchOut = (branchId: string, RLO: boolean) => {
     const branch = draft.branches[branchId];
     branch.input = RLO;
@@ -41,7 +42,7 @@ export const cycleScan = (draft: Store): Store => {
       case ELEMENT_TYPES.TOF:
       case ELEMENT_TYPES.TON:
       case ELEMENT_TYPES.TONR:
-        return setTimerOut(element, RLO, simulation, variables);
+        return setTimerOut(element, RLO, simulation, variables, executedTimers);
       case ELEMENT_TYPES.ADD:
       case ELEMENT_TYPES.SUB:
       case ELEMENT_TYPES.MUL:
@@ -287,11 +288,19 @@ const setMoveOut = (element: ElementMove, RLO: boolean, variables: { [key: strin
   return element.out;
 };
 
-const setTimerOut = (element: ElementTimer, RLO: boolean, simulation: boolean, variables: { [key: string]: Variable }): boolean => {
+const setTimerOut = (element: ElementTimer, RLO: boolean, simulation: boolean, variables: { [key: string]: Variable }, executedTimers: Set<string>): boolean => {
   const inOut = variables[element.parameters.inOut[0].uuid];
   if (!inOut?.subVars) return false;
   const { PT, ET, IN, R, Q } = inOut.subVars;
   const { type } = element;
+  const timerUuid = element.parameters.inOut[0].uuid;
+
+  if (executedTimers.has(timerUuid)) {
+    element.out = RLO && (variables[Q].value as boolean);
+    return element.out;
+  }
+  executedTimers.add(timerUuid);
+
   variables[IN].value = RLO;
   const ptValue = variables[PT].value;
   let etValue = variables[ET].value;
