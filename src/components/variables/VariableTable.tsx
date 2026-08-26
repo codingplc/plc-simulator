@@ -110,7 +110,7 @@ const VariableTable: React.FC<Props> = ({ mobileUI }: Props) => {
         </Table>
       </Container>
       <VariableTableFoot displayVarHelp={displayVarHelp} mobileUI={mobileUI} />
-      {!mobileUI && <StudioBanner />}
+      <StudioBanner />
     </VariableTab>
   );
 };

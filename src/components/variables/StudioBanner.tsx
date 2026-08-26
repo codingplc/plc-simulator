@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useFeatureFlagVariantKey, usePostHog } from "@posthog/react";
+import { usePostHog } from "@posthog/react";
 import styled, { keyframes } from "styled-components";
 
 import { BORDER_SIZE } from "../../consts/variableTableStyles";
@@ -7,81 +7,23 @@ import { VAR_TABLE_BORDER } from "../../consts/colors";
 
 import ladderImg from "../../images/ladder-logic-editor.png";
 
-// Destination experiment: two tailored banners. The `studio` arm pitches the
-// Studio app (ladder screenshot); the `learn` arm pitches Learn (passing
-// exercise tests). Each has its own copy, right-side panel and link, so this
-// measures the whole package (banner + destination) per arm.
-// Flag lives in PostHog project 142335. Fallback / kill switch = "studio".
-const FEATURE_FLAG = "plcsim-banner-destination";
+// The destination A/B (studio vs learn) is finished: studio won on click rate
+// and on what people did after landing, so the surviving arm is hardcoded and
+// the feature flag is gone. utm_campaign matches the docs callouts and the
+// empty-canvas notice so every migration surface rolls up as one campaign.
+const FEATURE = "studio.rungs.dev";
+const HEADING = "Next-generation PLC simulator online";
+const CTA_LABEL = "Open Studio →";
+const CAPTION = "Ladder Logic Editor";
 
-type Variant = "studio" | "learn";
-const DEFAULT_VARIANT: Variant = "studio";
-
-type RightPanel =
-  | { kind: "image"; src: string; caption: string }
-  | { kind: "tests"; title: string; items: string[]; summary: string };
-
-type VariantContent = {
-  feature: string;
-  heading: string;
-  cta: string;
-  href: string;
-  right: RightPanel;
-};
-
-const CONTENT: Record<Variant, VariantContent> = {
-  studio: {
-    feature: "studio.rungs.dev",
-    heading: "Next-generation PLC simulator online",
-    cta: "Open Studio →",
-    href: "https://studio.rungs.dev/",
-    right: { kind: "image", src: ladderImg, caption: "Ladder Logic Editor" },
-  },
-  learn: {
-    feature: "learn.rungs.dev",
-    heading: "Learn PLC programming, the practical way",
-    cta: "Start free exercises →",
-    href: "https://learn.rungs.dev/",
-    right: {
-      kind: "tests",
-      title: "ToggleLamp",
-      items: ["rising edge toggles", "holds on release", "no double-toggle"],
-      summary: "3 passed, 0 failed",
-    },
-  },
-};
-
-const buildTargetUrl = (variant: Variant): string => {
-  const base = CONTENT[variant].href;
+const buildTargetUrl = (): string => {
   const params = new URLSearchParams({
     utm_source: "plcsimulator.online",
     utm_medium: "banner",
-    utm_campaign: "plcsim_banner_dest",
-    utm_content: variant,
+    utm_campaign: "successor",
+    utm_content: "app_variable_table",
   });
-  const separator = base.includes("?") ? "&" : "?";
-  return `${base}${separator}${params.toString()}`;
-};
-
-// Dev-only QA override: ?banner=studio|learn. Stripped from production builds so
-// it can't skew the live experiment.
-const getOverrideVariant = (): Variant | null => {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = new URLSearchParams(window.location.search).get("banner");
-    if (raw === "studio" || raw === "learn") return raw;
-  } catch {
-    // Ignore URL parsing failures.
-  }
-  return null;
-};
-
-const resolveVariant = (raw: string | boolean | undefined): Variant => {
-  if (import.meta.env.DEV) {
-    const override = getOverrideVariant();
-    if (override) return override;
-  }
-  return raw === "learn" || raw === "studio" ? raw : DEFAULT_VARIANT;
+  return `https://studio.rungs.dev/?${params.toString()}`;
 };
 
 const fadeIn = keyframes`
@@ -163,53 +105,6 @@ const SlideImg = styled.img`
   animation: ${fadeIn} 0.5s ease both;
 `;
 
-const TestPanel = styled.div`
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 3cqh;
-  padding: 6% 8%;
-  background: oklch(12.9% 0.042 264.695);
-  font-family: "Roboto Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
-  animation: ${fadeIn} 0.5s ease both;
-`;
-const Marker = styled.span`
-  color: oklch(62.7% 0.265 303.9);
-`;
-const TestTitle = styled.div`
-  font-size: 9cqh;
-  font-weight: 700;
-  color: oklch(90% 0.007 247.896);
-  line-height: 1.2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-const TestRow = styled.div`
-  display: flex;
-  align-items: baseline;
-  gap: 5%;
-  font-size: 9cqh;
-  line-height: 1.2;
-  color: oklch(85% 0 0);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-const Check = styled.span`
-  color: oklch(70% 0.17 151.711);
-  font-weight: 700;
-`;
-const TestSummary = styled.div`
-  font-size: 9cqh;
-  font-weight: 700;
-  color: oklch(70% 0.17 151.711);
-  line-height: 1.2;
-  white-space: nowrap;
-`;
-
 const DISMISS_KEY = "studio-banner-dismissed";
 const DISMISS_DAYS = 7;
 const DISMISS_WINDOW_MS = DISMISS_DAYS * 86_400_000;
@@ -255,33 +150,21 @@ const CloseBtn = styled.button`
   }
 `;
 
-// `forceVariant` pins a specific arm and disables analytics/dismissal — for
-// local preview only (see the temporary stacked render in VariableTable).
-type StudioBannerProps = { forceVariant?: Variant };
-
-const StudioBanner: React.FC<StudioBannerProps> = ({ forceVariant }) => {
-  const preview = forceVariant !== undefined;
+const StudioBanner: React.FC = () => {
   const posthog = usePostHog();
-  const variantRaw = useFeatureFlagVariantKey(FEATURE_FLAG);
-  const variant = forceVariant ?? resolveVariant(variantRaw);
-  const content = CONTENT[variant];
-
   const [dismissed, setDismissed] = useState(() => isDismissed());
   const shownFired = useRef(false);
 
   useEffect(() => {
-    // Fire one impression per mount, once the flag has resolved, so the
-    // recorded variant matches the link the user actually sees (and clicks).
-    if (preview || shownFired.current || isDismissed()) return;
-    if (variantRaw === undefined && !import.meta.env.DEV) return;
+    // One impression per mount, skipped once the banner has been dismissed.
+    if (shownFired.current || isDismissed()) return;
     shownFired.current = true;
-    posthog?.capture("studio_banner_shown", { variant });
-  }, [preview, posthog, variant, variantRaw]);
+    posthog?.capture("studio_banner_shown");
+  }, [posthog]);
 
-  if (!preview && dismissed) return null;
+  if (dismissed) return null;
 
-  const href = buildTargetUrl(variant);
-  const { right } = content;
+  const href = buildTargetUrl();
 
   return (
     <Container>
@@ -289,44 +172,26 @@ const StudioBanner: React.FC<StudioBannerProps> = ({ forceVariant }) => {
         href={href}
         target="_blank"
         rel="noopener"
-        aria-label={`${content.feature}: ${content.heading}`}
+        aria-label={`${FEATURE}: ${HEADING}`}
         onClick={() => {
-          posthog?.capture("studio_banner_click", {
-            variant,
-            destination: href,
-          });
+          posthog?.capture("studio_banner_click", { destination: href });
         }}
       >
         <Left>
           <TextGroup>
-            <Feature>{content.feature}</Feature>
-            <Heading>{content.heading}</Heading>
+            <Feature>{FEATURE}</Feature>
+            <Heading>{HEADING}</Heading>
           </TextGroup>
-          <CTA className="cta">{content.cta}</CTA>
+          <CTA className="cta">{CTA_LABEL}</CTA>
         </Left>
         <Right>
-          {right.kind === "image" ? (
-            <SlideImg src={right.src} alt={right.caption} />
-          ) : (
-            <TestPanel>
-              <TestTitle>
-                <Marker>◆</Marker> {right.title}
-              </TestTitle>
-              {right.items.map((item) => (
-                <TestRow key={item}>
-                  <Check>✓</Check>
-                  <span>{item}</span>
-                </TestRow>
-              ))}
-              <TestSummary>✓ {right.summary}</TestSummary>
-            </TestPanel>
-          )}
+          <SlideImg src={ladderImg} alt={CAPTION} />
         </Right>
       </Wrapper>
       <CloseBtn
         aria-label="Dismiss banner"
         onClick={() => {
-          posthog?.capture("studio_banner_dismissed", { variant });
+          posthog?.capture("studio_banner_dismissed");
           setDismissedTimestamp();
           setDismissed(true);
         }}
