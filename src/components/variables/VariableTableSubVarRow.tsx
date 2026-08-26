@@ -6,6 +6,7 @@ import { SUB_VAR_SELECTED, VAR_TABLE_BORDER } from '../../consts/colors';
 import { BORDER_SIZE, DELETE_COL_WIDTH, TYPE_COL_WIDTH } from '../../consts/variableTableStyles';
 import { Store } from '../../interface';
 import { DELETE_VARIABLE } from '../../store/types';
+import isEditableTarget from '../../helpers/isEditableTarget';
 
 import VariableValue from './VariableValue';
 
@@ -46,6 +47,7 @@ const VariableTableSubVarRow: React.FC<Props> = (props: Props) => {
 
   const handleOnKeyDown = (e: React.KeyboardEvent<HTMLTableRowElement>) => {
     if (e.key !== 'Delete') return;
+    if (isEditableTarget(e.target)) return;
     dispatch({ type: DELETE_VARIABLE, payload: { uuid: parrentUuid } });
   };
 

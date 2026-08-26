@@ -11,6 +11,7 @@ import {
 } from '../../consts/variableTableStyles';
 import { Store } from '../../interface';
 import { DELETE_VARIABLE } from '../../store/types';
+import isEditableTarget from '../../helpers/isEditableTarget';
 
 import VariableDelete from './VariableDelete';
 import VariableName from './VariableName';
@@ -51,6 +52,7 @@ const VariableTableVarRow: React.FC<Props> = (props: Props) => {
 
   const handleOnKeyDown = (e: React.KeyboardEvent<HTMLTableRowElement>) => {
     if (e.key !== 'Delete') return;
+    if (isEditableTarget(e.target)) return;
     dispatch({ type: DELETE_VARIABLE, payload: { uuid: uuid } });
   };
 

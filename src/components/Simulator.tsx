@@ -12,6 +12,7 @@ import Menu from './menu/Menu';
 import VariableTable from './variables/VariableTable';
 import AlertSnackbar from './AlertSnackbar';
 import { DELETE_OBJECT } from '../store/types';
+import isEditableTarget from '../helpers/isEditableTarget';
 
 const Desktop = styled.div`
   display: grid;
@@ -63,6 +64,7 @@ const Simulator: React.FC = () => {
 
   const handleOnKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key !== 'Delete') return;
+    if (isEditableTarget(e.target)) return;
     dispatch({ type: DELETE_OBJECT });
   };
 
