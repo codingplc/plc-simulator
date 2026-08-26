@@ -1,7 +1,7 @@
 {
   "name": "plc-simulator",
   "homepage": "https://app.plcsimulator.online/",
-  "version": "1.6.11",
+  "version": "1.7.0",
   "private": true,
   "packageManager": "pnpm@10.6.2",
   "dependencies": {
