@@ -1,5 +1,6 @@
 import { Box, Button, Link, Typography } from '@mui/material';
 import { FiInfo, FiMail } from 'react-icons/fi';
+import { usePostHog } from '@posthog/react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -18,7 +19,21 @@ type Props = {
   mobileUI: boolean;
 };
 
+// Successor notice. Campaign matches the empty-canvas notice and the variable
+// table banner so every migration surface rolls up as one campaign.
+const studioUrl = (): string => {
+  const params = new URLSearchParams({
+    utm_source: 'plcsimulator.online',
+    utm_medium: 'referral',
+    utm_campaign: 'successor',
+    utm_content: 'app_footer',
+  });
+  return `https://studio.rungs.dev/?${params.toString()}`;
+};
+
 export default function Footer({ mobileUI }: Props) {
+  const posthog = usePostHog();
+
   return (
     <Container>
       {!mobileUI && (
@@ -33,8 +48,14 @@ export default function Footer({ mobileUI }: Props) {
       )}
       <Box mx={1} my="auto">
         <Typography variant="body2" align="center">
-          <Link href="https://www.patreon.com/plc_simulator_online" color="inherit" target="_blank" rel="noopener noreferrer">
-            SUPPORT US ON PATREON
+          <Link
+            href={studioUrl()}
+            color="inherit"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => posthog?.capture('studio_cta_click', { surface: 'footer' })}
+          >
+            TRY RUNGS STUDIO
           </Link>
         </Typography>
       </Box>
