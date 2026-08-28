@@ -16,7 +16,7 @@ export default defineConfig({
       },
     }),
     VitePWA({
-      registerType: 'prompt',
+      registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'logo192.png', 'logo512.png'],
       manifest: {
         short_name: 'PLC-Sim',
@@ -46,7 +46,8 @@ export default defineConfig({
       },
       workbox: {
         clientsClaim: true,
-        skipWaiting: false,
+        skipWaiting: true,
+        cleanupOutdatedCaches: true,
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.origin === self.location.origin && url.pathname.endsWith('.png'),
