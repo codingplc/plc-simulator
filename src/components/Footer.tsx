@@ -1,7 +1,7 @@
-import { Box, Button, Link, Typography } from '@mui/material';
-import { FiInfo, FiMail } from 'react-icons/fi';
-import { usePostHog } from '@posthog/react';
-import styled from 'styled-components';
+import { Box, Button, Link, Typography } from "@mui/material";
+import { FiInfo, FiMail } from "react-icons/fi";
+import { usePostHog } from "@posthog/react";
+import styled from "styled-components";
 
 const Container = styled.div`
   background-color: #abcdef;
@@ -23,10 +23,10 @@ type Props = {
 // table banner so every migration surface rolls up as one campaign.
 const studioUrl = (): string => {
   const params = new URLSearchParams({
-    utm_source: 'plcsimulator.online',
-    utm_medium: 'referral',
-    utm_campaign: 'successor',
-    utm_content: 'app_footer',
+    utm_source: "plcsimulator.online",
+    utm_medium: "referral",
+    utm_campaign: "successor",
+    utm_content: "app_footer",
   });
   return `https://studio.rungs.dev/?${params.toString()}`;
 };
@@ -37,11 +37,25 @@ export default function Footer({ mobileUI }: Props) {
   return (
     <Container>
       {!mobileUI && (
-        <Box sx={{ color: '#5C5C5C' }} my="auto">
-          <Button color="inherit" href="https://plcsimulator.online/about" target="_blank" rel="noopener noreferrer" size="small" startIcon={<FiInfo />}>
+        <Box sx={{ color: "#5C5C5C" }} my="auto">
+          <Button
+            color="inherit"
+            href="https://plcsimulator.online/about"
+            target="_blank"
+            rel="noopener noreferrer"
+            size="small"
+            startIcon={<FiInfo />}
+          >
             About
           </Button>
-          <Button color="inherit" target="_blank" rel="noopener noreferrer" href="https://plcsimulator.online/contact" size="small" startIcon={<FiMail />}>
+          <Button
+            color="inherit"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://plcsimulator.online/contact"
+            size="small"
+            startIcon={<FiMail />}
+          >
             Contact
           </Button>
         </Box>
@@ -53,18 +67,18 @@ export default function Footer({ mobileUI }: Props) {
             color="inherit"
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => posthog?.capture('studio_cta_click', { surface: 'footer' })}
+            onClick={() => posthog?.capture("studio_cta_click", { surface: "footer" })}
           >
-            TRY RUNGS STUDIO
+            studio.rungs.dev
           </Link>
         </Typography>
       </Box>
-      <Box sx={{ color: '#5C5C5C' }} mx={1} my="auto">
+      <Box sx={{ color: "#5C5C5C" }} mx={1} my="auto">
         <Typography variant="body2" align="center" color="inherit">
-          {'© '}
+          {"© "}
           <Link href="https://www.codingplc.com/" color="inherit" target="_blank" rel="noopener noreferrer">
             CodingPLC
-          </Link>{' '}
+          </Link>{" "}
           {new Date().getFullYear()}
         </Typography>
       </Box>
