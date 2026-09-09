@@ -6,6 +6,7 @@ import {
   TYPE_HEIGHT,
 } from '../../consts/blockDimensions';
 import { useDrop } from 'react-dnd';
+import useDndRef from '../../helpers/useDndRef';
 import { BLOCK, BRANCH, WIRE } from '../../consts/itemTypes';
 import { ElementDropResult } from '../../interface';
 import { DROP_HIGHLIGHT } from '../../consts/colors';
@@ -32,10 +33,11 @@ export default function Wire({ color, flexIndex, parrentId }: Props) {
     }),
     [color, flexIndex, parrentId],
   );
+  const dropRef = useDndRef(drop);
 
   return (
     <Box
-      ref={drop}
+      ref={dropRef}
       sx={{
         display: 'grid',
         gridTemplateRows: 'repeat(3, min-content)',

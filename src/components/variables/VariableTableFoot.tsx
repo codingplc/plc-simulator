@@ -10,7 +10,7 @@ import { BORDER_SIZE, TYPE_COL_WIDTH } from '../../consts/variableTableStyles';
 import NewVarHelp from './NewVarHelp';
 import { Box } from '@mui/material';
 
-const Input = styled.input<{ nameUsed: boolean; ref: React.RefObject<HTMLInputElement> }>`
+const Input = styled.input<{ nameUsed: boolean }>`
   background: ${(props) => (props.nameUsed ? BG_ERROR : 'white')};
   border: none;
   border-right: ${BORDER_SIZE} solid ${BG_VARIABLES};
@@ -60,7 +60,7 @@ export default function VariableTableFoot({ displayVarHelp, mobileUI }: Props) {
   const disableSubmit = nameUsed || name == '';
   const inputEl = useRef<HTMLInputElement>(null);
 
-  const handleOnClick = (inputEl: React.RefObject<HTMLInputElement>, name: string, type: string) => {
+  const handleOnClick = (inputEl: React.RefObject<HTMLInputElement | null>, name: string, type: string) => {
     if (name === '') return;
     setName('');
     dispatch({

@@ -2,6 +2,7 @@ import { ElementDropResult } from '../../interface';
 import { Box } from '@mui/material';
 import { POWER_RAIL_WIDTH } from '../../consts/blockDimensions';
 import { useDrop } from 'react-dnd';
+import useDndRef from '../../helpers/useDndRef';
 import { BLOCK } from '../../consts/itemTypes';
 import { DROP_HIGHLIGHT } from '../../consts/colors';
 
@@ -28,6 +29,7 @@ export default function PowerRail({ elementsLength, fillColor, position, rungId 
     }),
     [],
   );
+  const dropRef = useDndRef(drop);
 
   return (
     <Box
@@ -39,7 +41,7 @@ export default function PowerRail({ elementsLength, fillColor, position, rungId 
       }}
     >
       <Box
-        ref={drop}
+        ref={dropRef}
         sx={{
           position: 'absolute',
           top: 0,
