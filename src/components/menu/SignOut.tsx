@@ -3,13 +3,13 @@ import SvgButton from '../actions/ActionButton';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useDispatch } from 'react-redux';
 
-import { auth } from '../../helpers/firebase';
+import { auth, authModular } from '../../helpers/firebase';
 import { OPEN_ALERT_SNACKBAR } from '../../store/types';
 
 import { ReactComponent as LockSvg } from '../../svg/lock.svg';
 
 const Signout: React.FC = () => {
-  const [user] = useAuthState(auth);
+  const [user] = useAuthState(authModular);
   const dispatch = useDispatch();
 
   const signout = () =>
