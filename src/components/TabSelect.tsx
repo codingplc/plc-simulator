@@ -6,8 +6,8 @@ import { SET_DISPLAY_TAB } from "../store/types";
 import { DISPLAY_TAB } from "../consts/consts";
 import { BG_DIAGRAM, BG_TOOLBOX, BG_VARIABLES } from "../consts/colors";
 
-const Button = styled.button<{ color: string }>`
-  background-color: ${(props) => props.color};
+const Button = styled.button<{ $color: string }>`
+  background-color: ${(props) => props.$color};
   border: none;
   border-radius: 0.5rem 0.5rem 0 0;
   font-size: 16px;
@@ -27,7 +27,7 @@ const TabSelect: React.FC = () => {
   return (
     <Container>
       <Button
-        color={BG_VARIABLES}
+        $color={BG_VARIABLES}
         onClick={() => {
           dispatch({
             type: SET_DISPLAY_TAB,
@@ -38,7 +38,7 @@ const TabSelect: React.FC = () => {
         VARIABLES
       </Button>
       <Button
-        color={BG_DIAGRAM}
+        $color={BG_DIAGRAM}
         onClick={() => {
           dispatch({
             type: SET_DISPLAY_TAB,

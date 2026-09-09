@@ -29,7 +29,10 @@ const PropertiesContactType: React.FC = () => {
 
   return [XIO, XIC, OSP, OSN].includes(element?.type) ? (
     <Container>
-      <Typography my={1} variant="h6">
+      <Typography variant="h6" sx={{
+        my: 1,
+      }}
+    >
         Type
       </Typography>
       <TypeList>

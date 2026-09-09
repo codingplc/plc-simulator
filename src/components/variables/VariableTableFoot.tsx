@@ -10,8 +10,8 @@ import { BORDER_SIZE, TYPE_COL_WIDTH } from '../../consts/variableTableStyles';
 import NewVarHelp from './NewVarHelp';
 import { Box } from '@mui/material';
 
-const Input = styled.input<{ nameUsed: boolean; ref: React.RefObject<HTMLInputElement> }>`
-  background: ${(props) => (props.nameUsed ? BG_ERROR : 'white')};
+const Input = styled.input<{ $nameUsed: boolean }>`
+  background: ${(props) => (props.$nameUsed ? BG_ERROR : 'white')};
   border: none;
   border-right: ${BORDER_SIZE} solid ${BG_VARIABLES};
   box-sizing: border-box;
@@ -22,7 +22,7 @@ const Input = styled.input<{ nameUsed: boolean; ref: React.RefObject<HTMLInputEl
   text-overflow: ellipsis;
   width: 100%;
   z-index: 1;
-  :focus {
+  &:focus {
     outline: none;
   }
 `;
@@ -31,7 +31,7 @@ const Select = styled.select`
   border-right: ${BORDER_SIZE} solid ${BG_VARIABLES};
   flex: 0 0 ${TYPE_COL_WIDTH};
   font-size: inherit;
-  :focus {
+  &:focus {
     outline: none;
   }
 `;
@@ -41,7 +41,7 @@ const Submit = styled.input`
   border-top: 2px;
   flex: 0 0 4rem;
   font-size: inherit;
-  :focus {
+  &:focus {
     outline: none;
   }
 `;
@@ -60,7 +60,7 @@ export default function VariableTableFoot({ displayVarHelp, mobileUI }: Props) {
   const disableSubmit = nameUsed || name == '';
   const inputEl = useRef<HTMLInputElement>(null);
 
-  const handleOnClick = (inputEl: React.RefObject<HTMLInputElement>, name: string, type: string) => {
+  const handleOnClick = (inputEl: React.RefObject<HTMLInputElement | null>, name: string, type: string) => {
     if (name === '') return;
     setName('');
     dispatch({
@@ -81,12 +81,18 @@ export default function VariableTableFoot({ displayVarHelp, mobileUI }: Props) {
   };
 
   return (
-    <Box display="flex" fontSize={mobileUI ? '1.25em' : '1em'} position="relative">
+    <Box
+      sx={{
+        display: 'flex',
+        fontSize: mobileUI ? '1.25em' : '1em',
+        position: 'relative',
+      }}
+    >
       {displayVarHelp && <NewVarHelp />}
       <Input
         aria-label="New variable name"
         autoComplete="off"
-        nameUsed={nameUsed}
+        $nameUsed={nameUsed}
         ref={inputEl}
         type="none"
         id="new-var-name-input"
@@ -98,7 +104,11 @@ export default function VariableTableFoot({ displayVarHelp, mobileUI }: Props) {
         data-step="1"
         formNoValidate
       />
-      <Box position="relative">
+      <Box
+        sx={{
+          position: 'relative',
+        }}
+      >
         <Select aria-label="New variable type" name="varType" id="new-var-type-select" onChange={(event) => setType(event.target.value)}>
           <option value={BOOL}>{BOOL}</option>
           <option value={NUMBER}>{NUMBER}</option>

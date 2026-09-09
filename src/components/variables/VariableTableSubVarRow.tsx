@@ -18,8 +18,8 @@ const Name = styled.td`
   flex-basis: 100%;
   padding-left: 1rem;
 `;
-const Row = styled.tr<{ bgColor: string }>`
-  background: ${(props) => props.bgColor};
+const Row = styled.tr<{ $bgColor: string }>`
+  background: ${(props) => props.$bgColor};
   border-bottom: ${BORDER_SIZE} solid ${VAR_TABLE_BORDER};
   display: flex;
   outline: none;
@@ -55,7 +55,7 @@ const VariableTableSubVarRow: React.FC<Props> = (props: Props) => {
     <Row
       onKeyDown={(e) => handleOnKeyDown(e)}
       tabIndex={0}
-      bgColor={selected ? SUB_VAR_SELECTED : 'none'}
+      $bgColor={selected ? SUB_VAR_SELECTED : 'none'}
       onClick={() => logUuid(uuid)}
     >
       <Name>{name}</Name>

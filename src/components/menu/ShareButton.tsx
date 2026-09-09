@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { usePostHog } from "@posthog/react";
 import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
+import { type User } from "firebase/auth";
 
 import { Store } from "../../interface";
 import { firestore } from "../../store/store";
@@ -13,7 +15,7 @@ import { ReactComponent as SvgShare } from "../../svg/share.svg";
 
 import SvgButton from "../SvgButton";
 interface Props {
-  user: firebase.User;
+  user: User;
 }
 
 const ShareButton: React.FC<Props> = (props: Props) => {

@@ -20,7 +20,13 @@ export default function BlockType({ type }: Props) {
         padding: '0 0.375em',
       }}
     >
-      <Typography color={'#FFFFFF'} fontWeight={'medium'} fontSize={TYPE_FONT_SIZE}>
+      <Typography
+        sx={{
+          color: '#FFFFFF',
+          fontWeight: 'medium',
+          fontSize: TYPE_FONT_SIZE,
+        }}
+      >
         {type}
       </Typography>
     </Box>

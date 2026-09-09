@@ -39,8 +39,8 @@ export default function BlockParamValue({
       }}
     >
       <Box
-        alignSelf="end"
         sx={{
+          alignSelf: 'end',
           bgcolor:
             typeof value === 'boolean' ? (value && simulation ? OUT_ON : ELEMENT) : 'darkgrey',
           marginBottom: `calc((${PARAM_FONT_SIZE} + 0.25em) / 2)`,
@@ -71,9 +71,11 @@ export default function BlockParamValue({
         )}
         <Typography
           color={varName ? ELEMENT : ELEMENT_NOT_CFG}
-          fontSize={PARAM_FONT_SIZE}
-          fontWeight="medium"
-          m="0 0.25em"
+          sx={{
+            fontSize: PARAM_FONT_SIZE,
+            fontWeight: 'medium',
+            m: '0 0.25em',
+          }}
         >
           {name}
         </Typography>

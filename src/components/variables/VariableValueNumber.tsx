@@ -11,7 +11,7 @@ const Input = styled.input`
   box-sizing: border-box;
   height: 100%;
   width: 100%;
-  :focus {
+  &:focus {
     background: white;
     outline: none;
   }

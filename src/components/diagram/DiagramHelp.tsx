@@ -38,18 +38,45 @@ export default function DiagramHelp() {
   }, [posthog]);
 
   return (
-    <Box marginX="auto" maxWidth="36em" px={2} display="flex" flexDirection="column" alignItems="center">
-      <Typography mb={1} textAlign="center" color="#868e96" fontFamily="Virgil" fontSize="1.5em">
+    <Box
+      sx={{
+        marginX: "auto",
+        maxWidth: "36em",
+        px: 2,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <Typography
+        sx={{
+          mb: 1,
+          textAlign: "center",
+          color: "#868e96",
+          fontFamily: "Virgil",
+          fontSize: "1.5em",
+        }}
+      >
         I am not developing this simulator any more.
       </Typography>
-      <Typography mb={1} textAlign="center" color="#495057" fontSize="1em" lineHeight={1.7}>
+      <Typography
+        sx={{
+          mb: 1,
+          textAlign: "center",
+          color: "#495057",
+          fontSize: "1em",
+          lineHeight: 1.7,
+        }}
+      >
         All my effort goes to{" "}
         <Link
           href={studioUrl("app_empty_canvas_inline")}
           target="_blank"
           rel="noopener noreferrer"
-          fontWeight={600}
           onClick={() => posthog?.capture("studio_cta_click", { surface: "empty_canvas_inline" })}
+          sx={{
+            fontWeight: 600
+          }}
         >
           studio.rungs.dev
         </Link>{" "}
@@ -85,10 +112,18 @@ export default function DiagramHelp() {
         onClick={() => posthog?.capture("studio_cta_click", { surface: "empty_canvas" })}
         sx={{ mb: 4 }}
       >
-        <Typography fontSize="1.25em">Open Rungs Studio</Typography>
+        <Typography sx={{ fontSize: "1.25em" }}>Open Rungs Studio</Typography>
       </Button>
 
-      <Typography mb={1} textAlign="center" color="#868e96" fontFamily="Virgil" fontSize="1.5em">
+      <Typography
+        sx={{
+          mb: 1,
+          textAlign: "center",
+          color: "#868e96",
+          fontFamily: "Virgil",
+          fontSize: "1.5em",
+        }}
+      >
         Or keep building here
       </Typography>
       <Button
@@ -98,7 +133,7 @@ export default function DiagramHelp() {
         rel="noopener noreferrer"
         endIcon={<OpenInNew />}
       >
-        <Typography fontSize="1.25em">Read the documentation</Typography>
+        <Typography sx={{ fontSize: "1.25em" }}>Read the documentation</Typography>
       </Button>
       <Button
         component="a"
@@ -107,10 +142,10 @@ export default function DiagramHelp() {
         rel="noopener noreferrer"
         endIcon={<SlSocialYoutube />}
       >
-        <Typography fontSize="1.25em">Watch tutorial video</Typography>
+        <Typography sx={{ fontSize: "1.25em" }}>Watch tutorial video</Typography>
       </Button>
       <Button onClick={() => dispatch({ type: LOAD_SAMPLE })} endIcon={<LuFileText />}>
-        <Typography fontSize="1.25em">Load sample diagram</Typography>
+        <Typography sx={{ fontSize: "1.25em" }}>Load sample diagram</Typography>
       </Button>
     </Box>
   );

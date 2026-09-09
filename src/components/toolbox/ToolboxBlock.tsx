@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { ElementDropResult, ElementsAll } from '../../interface';
 import { Box } from '@mui/material';
 import { useDrag } from 'react-dnd';
+import useDndRef from '../../helpers/useDndRef';
 import { BLOCK, WIRE } from '../../consts/itemTypes';
 import { ADD_ELEMENT } from '../../store/types';
 import ToolboxIcon from './ToolboxIcon';
@@ -42,6 +43,7 @@ export default function ToolboxBlock({ block, Svg }: Props) {
   useEffect(() => {
     preview(getEmptyImage(), { captureDraggingState: true });
   }, []);
+  const dragRef = useDndRef(drag);
 
   return (
     <Box
@@ -55,7 +57,7 @@ export default function ToolboxBlock({ block, Svg }: Props) {
           paddingBottom: '100%',
         },
       }}
-      ref={drag}
+      ref={dragRef}
       onClick={() => dispatch({ type: ADD_ELEMENT, payload: { block, blockId: nanoid() } })}
     >
       <ToolboxIcon Svg={Svg} />

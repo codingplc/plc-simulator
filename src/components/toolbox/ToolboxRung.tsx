@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { RungDropResult } from '../../interface';
 import { Box } from '@mui/material';
 import { useDrag } from 'react-dnd';
+import useDndRef from '../../helpers/useDndRef';
 import { TOOL_RUNG } from '../../consts/itemTypes';
 import ToolboxIcon from './ToolboxIcon';
 import { ADD_RUNG } from '../../store/types';
@@ -39,6 +40,7 @@ export default function ToolboxRung({ Svg }: Props) {
   useEffect(() => {
     preview(getEmptyImage(), { captureDraggingState: true });
   }, []);
+  const dragRef = useDndRef(drag);
 
   return (
     <Box
@@ -52,7 +54,7 @@ export default function ToolboxRung({ Svg }: Props) {
           paddingBottom: '100%',
         },
       }}
-      ref={drag}
+      ref={dragRef}
       onClick={() => dispatch({ type: ADD_RUNG, payload: {} })}
     >
       <ToolboxIcon Svg={Svg} />

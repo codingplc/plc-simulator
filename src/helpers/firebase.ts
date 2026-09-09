@@ -1,4 +1,5 @@
 import firebase from "firebase/compat/app";
+import { getAuth, type Auth } from "firebase/auth";
 import "firebase/compat/analytics";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
@@ -39,6 +40,12 @@ const createDisabledAuth = () => {
 
 export const firebaseEnabled = hasRequiredConfig;
 export const auth = hasRequiredConfig ? firebase.auth() : createDisabledAuth();
+
+// react-firebase-hooks v5 takes the modular Auth instance, not the compat wrapper.
+// Both are backed by the same app, so the two stay in sync.
+export const authModular: Auth = hasRequiredConfig
+  ? getAuth(firebase.app())
+  : (auth as unknown as Auth);
 export const firestore = hasRequiredConfig ? firebase.firestore() : null;
 export const analytics = hasRequiredConfig ? firebase.analytics() : null;
 

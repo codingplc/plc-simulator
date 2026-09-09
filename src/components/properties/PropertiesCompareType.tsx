@@ -23,7 +23,10 @@ const PropertiesCompareType: React.FC = () => {
 
   return [EQU, NEQ, GRT, GEQ, LES, LEQ].includes(element?.type) ? (
     <Container>
-      <Typography my={1} variant="h6">
+      <Typography variant='h6' sx={{
+        my: 1,
+      }}
+    >
         Type
       </Typography>
       <TypeList>

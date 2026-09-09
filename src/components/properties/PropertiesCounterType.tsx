@@ -22,7 +22,10 @@ const PropertiesCounterType: React.FC = () => {
 
   return [CTD, CTU, CTUD].includes(element?.type) ? (
     <Container>
-      <Typography my={1} variant="h6">
+      <Typography variant='h6' sx={{
+        my: 1,
+      }}
+    >
         Type
       </Typography>
       <TypeList>

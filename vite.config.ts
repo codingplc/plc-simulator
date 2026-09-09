@@ -45,6 +45,9 @@ export default defineConfig({
         background_color: '#ffffff',
       },
       workbox: {
+        // firebase v12's compat layer pushes the main chunk past workbox's 2 MiB
+        // default, which would silently drop it from the precache and break offline use
+        maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         clientsClaim: true,
         skipWaiting: true,
         cleanupOutdatedCaches: true,

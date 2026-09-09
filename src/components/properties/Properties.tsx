@@ -24,7 +24,7 @@ export default function Properties() {
       open={openElementProps}
       fullWidth
       maxWidth="xs"
-      PaperProps={{ style: { overflowY: 'visible' } }}
+      slotProps={{ paper: { style: { overflowY: 'visible' } } }}
     >
       <DialogTitle>Block properties</DialogTitle>
       <DialogContent style={{ overflowY: 'visible' }}>

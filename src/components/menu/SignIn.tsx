@@ -57,7 +57,7 @@ export default function SignIn(props: Props) {
         </Typography>
         <Box component="form" onSubmit={(e) => handleSubmit(e)} noValidate sx={{ mt: 1 }}>
           <input type="hidden" autoFocus={true} />
-          <Grid item xs={12}>
+          <Grid size={12}>
             {error && (
               <Alert sx={{ my: 2 }} severity={'error'} color={'error'}>
                 {error}
@@ -90,12 +90,12 @@ export default function SignIn(props: Props) {
             Sign In
           </Button>
           <Grid container>
-            <Grid item xs>
+            <Grid size="grow">
               <Link onClick={() => handleFormChange('passRecover')} variant="body2">
                 Forgot password?
               </Link>
             </Grid>
-            <Grid item>
+            <Grid>
               <Link onClick={() => handleFormChange('signUp')} variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
@@ -103,7 +103,7 @@ export default function SignIn(props: Props) {
           </Grid>
         </Box>
       </Box>
-      <Box mt={3}></Box>
+      <Box sx={{ mt: 3 }}></Box>
     </Container>
   );
 }

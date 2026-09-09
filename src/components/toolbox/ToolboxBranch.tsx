@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { ElementDropResult, ElementsAll } from '../../interface';
 import { Box } from '@mui/material';
 import { useDrag } from 'react-dnd';
+import useDndRef from '../../helpers/useDndRef';
 import { BRANCH } from '../../consts/itemTypes';
 import ToolboxIcon from './ToolboxIcon';
 import { ADD_BRANCH, DROP_BRANCH } from '../../store/types';
@@ -42,6 +43,7 @@ export default function ToolboxBranch({ Svg }: Props) {
   useEffect(() => {
     preview(getEmptyImage(), { captureDraggingState: true });
   }, []);
+  const dragRef = useDndRef(drag);
 
   return (
     <Box
@@ -55,7 +57,7 @@ export default function ToolboxBranch({ Svg }: Props) {
           paddingBottom: '100%',
         },
       }}
-      ref={drag}
+      ref={dragRef}
       onClick={() => handleOnClick(ADD_BRANCH)}
     >
       <ToolboxIcon Svg={Svg} />

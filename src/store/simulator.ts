@@ -1,4 +1,4 @@
-import produce, { applyPatches, Patch } from "immer";
+import { produce, applyPatches, Patch } from "immer";
 import * as TYPES from "./types";
 import { INITIAL_DRAFT, SAMPLE_DRAFT } from "./const";
 import { Diagram, Store } from "../interface";

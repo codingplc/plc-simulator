@@ -6,7 +6,7 @@ import { usePostHog } from '@posthog/react';
 import { Store } from '../../interface';
 import { UNDO, REDO, LOAD_EMPTY, LOAD_SAMPLE } from '../../store/types';
 import { BG_MENU } from '../../consts/colors';
-import { auth, firebaseEnabled, logEvent } from '../../helpers/firebase';
+import { authModular, firebaseEnabled, logEvent } from '../../helpers/firebase';
 import useOnline from './useOnline';
 import { ReactComponent as FileText } from '../../svg/fileText.svg';
 import { ReactComponent as FileEmpty } from '../../svg/fileEmpty.svg';
@@ -26,7 +26,7 @@ export default function Menu() {
   const canUndo = useSelector((state: Store) => state.temp.canUndo);
   const [popupOpen, setPopupOpen] = useState(false);
   const [action, setAction] = useState('');
-  const [user] = useAuthState(auth);
+  const [user] = useAuthState(authModular);
   const online = useOnline();
   const dispatch = useDispatch();
   const posthog = usePostHog();

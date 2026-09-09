@@ -62,7 +62,7 @@ export default function SignUp(props: Props) {
 
         <Box component="form" noValidate onSubmit={(e) => handleSubmit(e)} sx={{ mt: 3 }}>
           {error && (
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Alert sx={{ my: 2 }} severity={'error'}>
                 {error}
               </Alert>
@@ -90,14 +90,19 @@ export default function SignUp(props: Props) {
             autoComplete="new-password"
             inputRef={passwordRef}
           />
-          <Grid item xs={12}>
-            <Box display="flex" mt={2}>
+          <Grid size={12}>
+            <Box
+              sx={{
+                display: "flex",
+                mt: 2,
+              }}
+            >
               <Checkbox
                 value="agreeToTermsAndConditions"
                 checked={checked}
                 onChange={() => setChecked(!checked)}
                 color="primary"
-                inputProps={{ 'aria-label': 'terms checkbox' }}
+                slotProps={{ input: { 'aria-label': 'terms checkbox' } }}
               />
               <Typography>
                 I have read and agree to the{' '}
@@ -126,8 +131,11 @@ export default function SignUp(props: Props) {
           >
             Sign Up
           </Button>
-          <Grid container justifyContent="flex-end">
-            <Grid item>
+          <Grid container sx={{
+            justifyContent: "flex-end",
+          }}
+        >
+            <Grid>
               <Link onClick={() => handleFormChange('signIn')} variant="body2">
                 Already have an account? Sign in
               </Link>
@@ -135,7 +143,7 @@ export default function SignUp(props: Props) {
           </Grid>
         </Box>
       </Box>
-      <Box mt={3}></Box>
+      <Box sx={{ mt: 3 }}></Box>
     </Container>
   );
 }

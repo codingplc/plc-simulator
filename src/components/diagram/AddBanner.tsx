@@ -4,7 +4,13 @@ import AdSense from './AdSense';
 
 export default function AddBanner() {
   return (
-    <Box width={'100%'} height={'120px'} p={1}>
+    <Box
+      sx={{
+        width: '100%',
+        height: '120px',
+        p: 1,
+      }}
+    >
       <AdSense key={nanoid()} />
     </Box>
   );
