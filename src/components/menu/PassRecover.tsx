@@ -92,9 +92,7 @@ export default function PassRecover(props: Props) {
           </Grid>
         </Box>
       </Box>
-      <Box sx={{
-        mt: 2
-      }}></Box>
+      <Box sx={{ mt: 2 }}></Box>
     </Container>
   );
 }

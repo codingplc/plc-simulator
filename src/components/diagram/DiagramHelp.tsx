@@ -112,9 +112,7 @@ export default function DiagramHelp() {
         onClick={() => posthog?.capture("studio_cta_click", { surface: "empty_canvas" })}
         sx={{ mb: 4 }}
       >
-        <Typography sx={{
-          fontSize: "1.25em"
-        }}>Open Rungs Studio</Typography>
+        <Typography sx={{ fontSize: "1.25em" }}>Open Rungs Studio</Typography>
       </Button>
 
       <Typography
@@ -135,9 +133,7 @@ export default function DiagramHelp() {
         rel="noopener noreferrer"
         endIcon={<OpenInNew />}
       >
-        <Typography sx={{
-          fontSize: "1.25em"
-        }}>Read the documentation</Typography>
+        <Typography sx={{ fontSize: "1.25em" }}>Read the documentation</Typography>
       </Button>
       <Button
         component="a"
@@ -146,14 +142,10 @@ export default function DiagramHelp() {
         rel="noopener noreferrer"
         endIcon={<SlSocialYoutube />}
       >
-        <Typography sx={{
-          fontSize: "1.25em"
-        }}>Watch tutorial video</Typography>
+        <Typography sx={{ fontSize: "1.25em" }}>Watch tutorial video</Typography>
       </Button>
       <Button onClick={() => dispatch({ type: LOAD_SAMPLE })} endIcon={<LuFileText />}>
-        <Typography sx={{
-          fontSize: "1.25em"
-        }}>Load sample diagram</Typography>
+        <Typography sx={{ fontSize: "1.25em" }}>Load sample diagram</Typography>
       </Button>
     </Box>
   );

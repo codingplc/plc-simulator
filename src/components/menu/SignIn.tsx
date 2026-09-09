@@ -103,9 +103,7 @@ export default function SignIn(props: Props) {
           </Grid>
         </Box>
       </Box>
-      <Box sx={{
-        mt: 3
-      }}></Box>
+      <Box sx={{ mt: 3 }}></Box>
     </Container>
   );
 }

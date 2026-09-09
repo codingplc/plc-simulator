@@ -30,10 +30,11 @@ export default function Diagram(props: Props) {
         outline: 'none',
       }}
     >
-      <Box sx={{
-        p: '0.25em',
-      }}
-    >
+      <Box
+        sx={{
+          p: '0.25em',
+        }}
+      >
         {runglist.map((uuid: string, index) => (
           <Rung key={`rung-${uuid}`} index={index} uuid={uuid} mobileUI={mobileUI} />
         ))}

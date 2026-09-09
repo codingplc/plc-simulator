@@ -11,15 +11,15 @@ const Container = styled.td`
   border-right: ${BORDER_SIZE} solid ${VAR_TABLE_BORDER};
   flex-basis: 100%;
 `;
-const Input = styled.input<{ nameUsed: boolean; editEnabled: boolean }>`
+const Input = styled.input<{ $nameUsed: boolean; $editEnabled: boolean }>`
   background: none;
   border: none;
   box-sizing: border-box;
   height: 100%;
   text-overflow: ellipsis;
   width: 100%;
-  :focus {
-    background: ${(props) => (props.nameUsed && props.editEnabled ? BG_ERROR : 'white')};
+  &:focus {
+    background: ${(props) => (props.$nameUsed && props.$editEnabled ? BG_ERROR : 'white')};
     outline: none;
   }
 `;
@@ -82,8 +82,8 @@ const VariableName: React.FC<Props> = (props: Props) => {
     <Container onClick={() => handleOnClick()}>
       <Input
         aria-label={`Variable ${uuid.substring(0, 8)} name`}
-        editEnabled={editEnabled}
-        nameUsed={nameUsed}
+        $editEnabled={editEnabled}
+        $nameUsed={nameUsed}
         onBlur={() => handleOnBlur()}
         onChange={(event) => handleOnChange(event)}
         onFocus={(event) => handleOnFocus(event)}

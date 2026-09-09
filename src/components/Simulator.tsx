@@ -30,14 +30,14 @@ const Header = styled.div`
   grid-area: header;
   width: 100%;
 `;
-const Mobile = styled.div<{ displayTab: string }>`
+const Mobile = styled.div<{ $displayTab: string }>`
   display: grid;
   grid-template: auto auto auto 1fr auto auto / 100%;
   grid-template-areas:
     'menu'
     'toolbox'
     'tab-select'
-    '${(props) => props.displayTab}'
+    '${(props) => props.$displayTab}'
     'actions'
     'footer';
   height: 100%;
@@ -71,7 +71,7 @@ const Simulator: React.FC = () => {
   return (
     <Container>
       {mobileUI ? (
-        <Mobile displayTab={displayTab}>
+        <Mobile $displayTab={displayTab}>
           <Menu />
           <Toolbox />
           <TabSelect />

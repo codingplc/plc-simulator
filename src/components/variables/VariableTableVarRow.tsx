@@ -21,8 +21,8 @@ import VariableValue from './VariableValue';
 const DeletePlaceholder = styled.th`
   flex: 0 0 ${DELETE_COL_WIDTH};
 `;
-const Row = styled.tr<{ bgColor: string }>`
-  background: ${(props) => props.bgColor};
+const Row = styled.tr<{ $bgColor: string }>`
+  background: ${(props) => props.$bgColor};
   border-bottom: ${BORDER_SIZE} solid ${VAR_TABLE_BORDER};
   display: flex;
   height: ${ROW_HEIGHT};
@@ -61,7 +61,7 @@ const VariableTableVarRow: React.FC<Props> = (props: Props) => {
       <Row
         onKeyDown={(e) => handleOnKeyDown(e)}
         tabIndex={0}
-        bgColor={selected ? VAR_SELECTED : 'none'}
+        $bgColor={selected ? VAR_SELECTED : 'none'}
         onClick={() => logUuid(uuid)}
       >
         <VariableName selected={selected} uuid={uuid} />
