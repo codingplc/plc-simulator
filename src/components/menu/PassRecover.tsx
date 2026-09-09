@@ -53,7 +53,7 @@ export default function PassRecover(props: Props) {
           Forgot Password?
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          <Grid item xs={12}>
+          <Grid size={12}>
             {error && (
               <Alert sx={{ my: 2 }} severity={'error'} color={'error'}>
                 {error}
@@ -80,8 +80,11 @@ export default function PassRecover(props: Props) {
           <Button sx={{ mt: 3, mb: 2 }} type="submit" fullWidth variant="contained" color="primary">
             Reset password
           </Button>
-          <Grid container justifyContent="flex-end">
-            <Grid item>
+          <Grid container sx={{
+            justifyContent: 'flex-end',
+          }}
+        >
+            <Grid>
               <Link onClick={() => handleFormChange('signIn')} variant="body2">
                 Remember your password?
               </Link>
@@ -89,7 +92,9 @@ export default function PassRecover(props: Props) {
           </Grid>
         </Box>
       </Box>
-      <Box mt={2}></Box>
+      <Box sx={{
+        mt: 2
+      }}></Box>
     </Container>
   );
 }

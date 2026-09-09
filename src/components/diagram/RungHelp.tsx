@@ -2,7 +2,14 @@ import { Box } from '@mui/material';
 
 export default function RungHelp() {
   return (
-    <Box position={'absolute'} zIndex={-1} top={-10} left={10}>
+    <Box
+      sx={{
+        position: 'absolute',
+        zIndex: -1,
+        top: -10,
+        left: 10,
+      }}
+    >
       <svg
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"

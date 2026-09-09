@@ -34,11 +34,16 @@ export default function PropertiesParameters() {
     >
       {Object.keys(element.parameters).map((paramGrp) => (
         <Box key={nanoid()}>
-          <Typography mb={1} variant="h6">{`${paramGrp.charAt(0).toUpperCase() + paramGrp.slice(1)} parameters`}</Typography>
+          <Typography variant='h6' sx={{
+            mb: 1
+          }}>{`${paramGrp.charAt(0).toUpperCase() + paramGrp.slice(1)} parameters`}</Typography>
           {element.parameters[paramGrp].map((parameter: ElementParameter, index: number) => {
             const options = filterByType(variables, parameter.type);
             return (
-              <Box key={nanoid()} mb={1}>
+              <Box key={nanoid()} sx={{
+                mb: 1,
+              }}
+            >
                 <Select
                   isSearchable={false}
                   onChange={(option) => handleOnchange(option as VariableOption, index, paramGrp, parameter.uuid)}

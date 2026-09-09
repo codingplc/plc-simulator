@@ -83,7 +83,13 @@ export const CustomDragLayer = () => {
               opacity: 0.7,
             }}
           >
-            <Box flexShrink={0} bgcolor={ELEMENT} width={POWER_RAIL_WIDTH} />
+            <Box
+              sx={{
+                flexShrink: 0,
+                bgcolor: ELEMENT,
+                width: POWER_RAIL_WIDTH,
+              }}
+            />
             <Box
               sx={{
                 display: 'flex',

@@ -2,7 +2,14 @@ import { Box } from '@mui/material';
 
 export default function NewVarHelp() {
   return (
-    <Box position="absolute" zIndex={0} bottom="100%" right={30}>
+    <Box
+      sx={{
+        position: "absolute",
+        zIndex: 0,
+        bottom: "100%",
+        right: 30,
+      }}
+    >
       <svg
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"

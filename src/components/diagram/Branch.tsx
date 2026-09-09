@@ -25,7 +25,12 @@ export default function Branch(props: Props) {
   const fillMarginRight = simulation ? (out ? OUT_ON : ELEMENT) : parrentSelected ? SELECTED : ELEMENT;
 
   return (
-    <Box display="flex" flexShrink="0">
+    <Box
+      sx={{
+        display: 'flex',
+        flexShrink: '0',
+      }}
+    >
       <Box
         sx={{
           backgroundColor: fillTopLeft,

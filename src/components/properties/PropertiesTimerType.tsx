@@ -23,7 +23,10 @@ const PropertiesTimerType: React.FC = () => {
 
   return [TOF, TON, TONR].includes(element?.type) ? (
     <Container>
-      <Typography my={1} variant="h6">
+      <Typography variant='h6' sx={{
+        my: 1,
+      }}
+    >
         Type
       </Typography>
       <TypeList>

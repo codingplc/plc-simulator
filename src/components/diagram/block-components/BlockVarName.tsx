@@ -29,10 +29,12 @@ export default function BlockVarName({ columnStart, columnEnd, name, row }: Prop
         }}
       >
         <Typography
-          fontWeight={name === undefined ? 'bold' : 'medium'}
-          fontSize="0.875em"
           color={name === undefined ? ELEMENT_NOT_CFG : ELEMENT}
           noWrap
+          sx={{
+            fontWeight: name === undefined ? 'bold' : 'medium',
+            fontSize: '0.875em',
+          }}
         >
           {name === undefined ? '<???>' : name}
         </Typography>

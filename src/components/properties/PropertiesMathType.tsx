@@ -23,7 +23,10 @@ const PropertiesMathType: React.FC = () => {
 
   return [ADD, SUB, MUL, DIV].includes(element?.type) ? (
     <Container>
-      <Typography my={1} variant="h6">
+      <Typography variant='h6' sx={{
+        my: 1,
+      }}
+    >
         Type
       </Typography>
       <TypeList>

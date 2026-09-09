@@ -21,7 +21,9 @@ export default function BlockParamDesc({ column, justify, desc, row }: Props) {
         margin: '0 0.25em',
       }}
     >
-      <Typography fontSize={PARAM_FONT_SIZE}>{desc}</Typography>
+      <Typography sx={{
+        fontSize: PARAM_FONT_SIZE
+      }}>{desc}</Typography>
     </Box>
   );
 }

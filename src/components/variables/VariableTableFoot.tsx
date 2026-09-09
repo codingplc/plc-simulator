@@ -81,7 +81,13 @@ export default function VariableTableFoot({ displayVarHelp, mobileUI }: Props) {
   };
 
   return (
-    <Box display="flex" fontSize={mobileUI ? '1.25em' : '1em'} position="relative">
+    <Box
+      sx={{
+        display: 'flex',
+        fontSize: mobileUI ? '1.25em' : '1em',
+        position: 'relative',
+      }}
+    >
       {displayVarHelp && <NewVarHelp />}
       <Input
         aria-label="New variable name"
@@ -98,7 +104,10 @@ export default function VariableTableFoot({ displayVarHelp, mobileUI }: Props) {
         data-step="1"
         formNoValidate
       />
-      <Box position="relative">
+      <Box sx={{
+        position: 'relative',
+      }}
+    >
         <Select aria-label="New variable type" name="varType" id="new-var-type-select" onChange={(event) => setType(event.target.value)}>
           <option value={BOOL}>{BOOL}</option>
           <option value={NUMBER}>{NUMBER}</option>

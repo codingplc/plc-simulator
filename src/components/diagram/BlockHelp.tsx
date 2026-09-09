@@ -2,7 +2,13 @@ import { Box } from '@mui/material';
 
 export default function BlockHelp() {
   return (
-    <Box position="absolute" top="60%" left="80%">
+    <Box
+      sx={{
+        position: "absolute",
+        top: "60%",
+        left: "80%",
+      }}
+    >
       <svg
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"

@@ -37,7 +37,12 @@ export default function Footer({ mobileUI }: Props) {
   return (
     <Container>
       {!mobileUI && (
-        <Box sx={{ color: "#5C5C5C" }} my="auto">
+        <Box
+          sx={{
+            my: "auto",
+            color: "#5C5C5C",
+          }}
+        >
           <Button
             color="inherit"
             href="https://plcsimulator.online/about"
@@ -60,7 +65,12 @@ export default function Footer({ mobileUI }: Props) {
           </Button>
         </Box>
       )}
-      <Box mx={1} my="auto">
+      <Box
+        sx={{
+          mx: 1,
+          my: "auto",
+        }}
+      >
         <Typography variant="body2" align="center">
           <Link
             href={studioUrl()}
@@ -73,8 +83,17 @@ export default function Footer({ mobileUI }: Props) {
           </Link>
         </Typography>
       </Box>
-      <Box sx={{ color: "#5C5C5C" }} mx={1} my="auto">
-        <Typography variant="body2" align="center" color="inherit">
+      <Box
+        sx={{
+          mx: 1,
+          my: "auto",
+          color: "#5C5C5C",
+        }}
+      >
+        <Typography variant="body2" align="center" sx={{
+          color: "inherit",
+        }}
+      >
           {"© "}
           <Link href="https://www.codingplc.com/" color="inherit" target="_blank" rel="noopener noreferrer">
             CodingPLC

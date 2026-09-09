@@ -7,9 +7,9 @@
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
-    "@mui/icons-material": "^5.14.16",
-    "@mui/material": "^5.14.17",
-    "@mui/system": "5.18.0",
+    "@mui/icons-material": "^9.4.0",
+    "@mui/material": "^9.4.0",
+    "@mui/system": "9.4.0",
     "@posthog/react": "^1.8.2",
     "@sentry/react": "^8.7.0",
     "dnd-core": "16.0.1",
