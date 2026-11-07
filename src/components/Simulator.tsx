@@ -9,6 +9,7 @@ import Footer from './Footer';
 import TabSelect from './TabSelect';
 import Toolbox from './toolbox/Toolbox';
 import Menu from './menu/Menu';
+import MigrationNotice from './MigrationNotice';
 import VariableTable from './variables/VariableTable';
 import AlertSnackbar from './AlertSnackbar';
 import { DELETE_OBJECT } from '../store/types';
@@ -16,8 +17,9 @@ import isEditableTarget from '../helpers/isEditableTarget';
 
 const Desktop = styled.div`
   display: grid;
-  grid-template: auto 1fr auto / 1fr 2fr;
+  grid-template: auto auto 1fr auto / 1fr 2fr;
   grid-template-areas:
+    'notice notice'
     'header header'
     'variables diagram'
     'footer footer';
@@ -32,8 +34,9 @@ const Header = styled.div`
 `;
 const Mobile = styled.div<{ $displayTab: string }>`
   display: grid;
-  grid-template: auto auto auto 1fr auto auto / 100%;
+  grid-template: auto auto auto auto 1fr auto auto / 100%;
   grid-template-areas:
+    'notice'
     'menu'
     'toolbox'
     'tab-select'
@@ -72,6 +75,7 @@ const Simulator: React.FC = () => {
     <Container>
       {mobileUI ? (
         <Mobile $displayTab={displayTab}>
+          <MigrationNotice mobileUI />
           <Menu />
           <Toolbox />
           <TabSelect />
@@ -82,6 +86,7 @@ const Simulator: React.FC = () => {
         </Mobile>
       ) : (
         <Desktop tabIndex={0} onKeyDown={(e) => handleOnKeyDown(e)}>
+          <MigrationNotice mobileUI={false} />
           <Header>
             <Menu />
             <Toolbox />

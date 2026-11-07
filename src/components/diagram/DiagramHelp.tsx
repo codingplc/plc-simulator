@@ -57,7 +57,7 @@ export default function DiagramHelp() {
           fontSize: "1.5em",
         }}
       >
-        I am not developing this simulator any more.
+        PLC Simulator Online is moving to Rungs Studio.
       </Typography>
       <Typography
         sx={{
@@ -68,7 +68,6 @@ export default function DiagramHelp() {
           lineHeight: 1.7,
         }}
       >
-        All my effort goes to{" "}
         <Link
           href={studioUrl("app_empty_canvas_inline")}
           target="_blank"
@@ -78,9 +77,9 @@ export default function DiagramHelp() {
             fontWeight: 600
           }}
         >
-          studio.rungs.dev
+          Rungs Studio
         </Link>{" "}
-        now. It is free and browser-based like this simulator, but it does more:
+        is free and browser-based like this simulator, but it does more:
       </Typography>
       {/* Left-aligned inside a centered block — centered bullets read ragged. */}
       <Box
