@@ -5,7 +5,6 @@ import styled from "styled-components";
 import { Store } from "../../interface";
 import { BG_VARIABLES, VAR_TABLE_BORDER } from "../../consts/colors";
 
-import StudioBanner from "./StudioBanner";
 import VariableTableFoot from "./VariableTableFoot";
 import VariableTableVarRow from "./VariableTableVarRow";
 import { BORDER_SIZE, DELETE_COL_WIDTH, TYPE_COL_WIDTH, VALUE_COL_WIDTH } from "../../consts/variableTableStyles";
@@ -110,7 +109,6 @@ const VariableTable: React.FC<Props> = ({ mobileUI }: Props) => {
         </Table>
       </Container>
       <VariableTableFoot displayVarHelp={displayVarHelp} mobileUI={mobileUI} />
-      <StudioBanner />
     </VariableTab>
   );
 };

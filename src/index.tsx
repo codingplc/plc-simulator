@@ -20,6 +20,22 @@ import.meta.env.MODE === "production" &&
     release: `plc-simulator@${version}`,
     dsn: "https://32c5d1333234467f9bbd89ffe4953fbf@o4505075727990784.ingest.sentry.io/4505075729629184",
     integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
+    // v11 collects user info, cookies and request bodies unless told otherwise. This keeps
+    // what v10 collected with sendDefaultPii unset, as in its migration guide.
+    dataCollection: {
+      userInfo: false,
+      cookies: false,
+      httpHeaders: {
+        request: { deny: ["forwarded", "-ip", "remote-", "via", "-user"] },
+        response: { deny: ["forwarded", "-ip", "remote-", "via", "-user"] },
+      },
+      httpBodies: [],
+      urlQueryParams: { deny: ["forwarded", "-ip", "remote-", "via", "-user"] },
+      genAI: { inputs: false, outputs: false },
+      databaseQueryData: false,
+      queues: false,
+      graphQL: { document: false, variables: false },
+    },
     // Performance Monitoring
     tracesSampleRate: 0.2,
     // Session Replay

@@ -6,23 +6,13 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { usePostHog } from "@posthog/react";
 import { LOAD_SAMPLE } from "../../store/types";
+import { studioHomeLink } from "../../rungs/projectLink";
 
 // Successor notice. Shown on an empty canvas, which is where switching costs the
-// reader nothing — they have not built anything yet. Campaign matches the docs
-// callouts (plcsimulator-docs/components/RungsCallout.tsx) so both surfaces roll
-// up as one migration campaign.
-// The inline link and the button carry different utm_content so the two can be
-// told apart, matching how the docs callouts tag their inline link.
-const studioUrl = (content: string) => {
-  const params = new URLSearchParams({
-    utm_source: "plcsimulator.online",
-    utm_medium: "referral",
-    utm_campaign: "successor",
-    utm_content: content,
-  });
-  return `https://studio.rungs.dev/?${params.toString()}`;
-};
-
+// reader nothing — they have not built anything yet. The inline link and the
+// button carry different utm_content so the two can be told apart, matching how
+// the docs callouts (plcsimulator-docs/components/RungsCallout.tsx) tag theirs.
+//
 // DiagramHelp remounts whenever the canvas empties again, so the impression is
 // tracked per page load rather than per mount.
 let shownFired = false;
@@ -57,7 +47,7 @@ export default function DiagramHelp() {
           fontSize: "1.5em",
         }}
       >
-        I am not developing this simulator any more.
+        PLC Simulator Online is moving to Rungs Studio.
       </Typography>
       <Typography
         sx={{
@@ -68,9 +58,8 @@ export default function DiagramHelp() {
           lineHeight: 1.7,
         }}
       >
-        All my effort goes to{" "}
         <Link
-          href={studioUrl("app_empty_canvas_inline")}
+          href={studioHomeLink("app_empty_canvas_inline")}
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => posthog?.capture("studio_cta_click", { surface: "empty_canvas_inline" })}
@@ -78,9 +67,9 @@ export default function DiagramHelp() {
             fontWeight: 600
           }}
         >
-          studio.rungs.dev
+          Rungs Studio
         </Link>{" "}
-        now. It is free and browser-based like this simulator, but it does more:
+        is free and browser-based like this simulator, but it does more:
       </Typography>
       {/* Left-aligned inside a centered block — centered bullets read ragged. */}
       <Box
@@ -104,7 +93,7 @@ export default function DiagramHelp() {
       </Box>
       <Button
         component="a"
-        href={studioUrl("app_empty_canvas")}
+        href={studioHomeLink("app_empty_canvas")}
         target="_blank"
         rel="noopener noreferrer"
         variant="outlined"
