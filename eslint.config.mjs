@@ -6,9 +6,7 @@ import react from 'eslint-plugin-react';
 import globals from 'globals';
 
 export default [
-  // tests/ holds an unwired enzyme template full of __COMPONENT_NAME__
-  // placeholders, so it does not parse as real source
-  { ignores: ['build/**', 'dev-dist/**', 'tests/**'] },
+  { ignores: ['build/**', 'dev-dist/**'] },
   js.configs.recommended,
   {
     files: ['**/*.{ts,tsx}'],
