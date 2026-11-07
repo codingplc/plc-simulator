@@ -16,7 +16,7 @@ import {
 import { Store } from "../interface";
 import { store } from "../store/store";
 import { OPEN_ALERT_SNACKBAR } from "../store/types";
-import { diagramToRungs } from "../rungs/diagramToRungs";
+import { Conversion, diagramToRungs } from "../rungs/diagramToRungs";
 import { studioHomeLink, studioProjectLink } from "../rungs/projectLink";
 
 const LINK_CONTENT = "migration_notice";
@@ -29,7 +29,14 @@ function convertCurrentDiagram() {
   return diagramToRungs({ branches, elements, runglist, rungs, variables });
 }
 
-const isEmptyDiagram = () => Object.keys((store.getState() as unknown as Store).elements).length === 0;
+function reportFailure(error: unknown) {
+  // Without this the person is left with no word of what went wrong.
+  Sentry.captureException(error);
+  store.dispatch({
+    type: OPEN_ALERT_SNACKBAR,
+    payload: { color: "error", open: true, text: "This project could not be opened in Rungs Studio." },
+  });
+}
 
 /**
  * Tells people the simulator is moving, and takes their project with them.
@@ -42,7 +49,8 @@ const isEmptyDiagram = () => Object.keys((store.getState() as unknown as Store).
  */
 export default function MigrationNotice({ mobileUI }: { mobileUI: boolean }) {
   const posthog = usePostHog();
-  const [notes, setNotes] = useState<string[]>([]);
+  // A conversion with notes waits here while the person reads them.
+  const [pending, setPending] = useState<Conversion | null>(null);
   const hasProject = useSelector((state: Store) => Object.keys(state.elements).length > 0);
 
   useEffect(() => {
@@ -51,38 +59,48 @@ export default function MigrationNotice({ mobileUI }: { mobileUI: boolean }) {
     posthog?.capture("studio_cta_shown", { surface: LINK_CONTENT });
   }, [posthog]);
 
-  const openInStudio = async (noteCount: number) => {
+  /** `rungsText` is null for an empty project, which goes to the Studio home page. */
+  const openInStudio = async (rungsText: string | null, noteCount: number) => {
     // Opened now, not after the await: a browser only allows a new tab during the click.
     const tab = window.open("about:blank", "_blank");
-    const empty = isEmptyDiagram();
+    const empty = rungsText === null;
     posthog?.capture("studio_cta_click", { surface: LINK_CONTENT, empty_project: empty, note_count: noteCount });
     let link: string;
     try {
-      link = empty
-        ? studioHomeLink(LINK_CONTENT)
-        : await studioProjectLink(convertCurrentDiagram().rungsText, LINK_CONTENT);
+      link = empty ? studioHomeLink(LINK_CONTENT) : await studioProjectLink(rungsText, LINK_CONTENT);
     } catch (error) {
-      // Without this the person is left with an empty tab and no word of what went wrong.
       tab?.close();
-      Sentry.captureException(error);
-      store.dispatch({
-        type: OPEN_ALERT_SNACKBAR,
-        payload: { color: "error", open: true, text: "This project could not be opened in Rungs Studio." },
-      });
+      reportFailure(error);
       return;
     }
     if (tab) {
       tab.opener = null;
       tab.location.href = link;
-    } else {
+    } else if (empty) {
       window.location.href = link;
+    } else {
+      // The project lives only in this tab, so leaving it would lose the person's work.
+      store.dispatch({
+        type: OPEN_ALERT_SNACKBAR,
+        payload: { color: "error", open: true, text: "Your browser blocked the new tab. Allow pop-ups for this site and try again." },
+      });
     }
   };
 
   const handleClick = () => {
-    const found = isEmptyDiagram() ? [] : convertCurrentDiagram().notes;
-    if (found.length > 0) setNotes(found);
-    else void openInStudio(0);
+    if (!hasProject) {
+      void openInStudio(null, 0);
+      return;
+    }
+    let conversion: Conversion;
+    try {
+      conversion = convertCurrentDiagram();
+    } catch (error) {
+      reportFailure(error);
+      return;
+    }
+    if (conversion.notes.length > 0) setPending(conversion);
+    else void openInStudio(conversion.rungsText, 0);
   };
 
   return (
@@ -108,12 +126,12 @@ export default function MigrationNotice({ mobileUI }: { mobileUI: boolean }) {
       <Button onClick={handleClick} size="small" sx={{ flexShrink: 0 }} variant="contained">
         {hasProject ? "Open this project in Rungs Studio" : "Open Rungs Studio"}
       </Button>
-      <Dialog onClose={() => setNotes([])} open={notes.length > 0}>
+      <Dialog onClose={() => setPending(null)} open={pending !== null}>
         <DialogTitle>Before you open this project</DialogTitle>
         <DialogContent>
           <DialogContentText component="div">
             <ul>
-              {notes.map((note) => (
+              {pending?.notes.map((note) => (
                 <li key={note}>{note}</li>
               ))}
             </ul>
@@ -121,12 +139,12 @@ export default function MigrationNotice({ mobileUI }: { mobileUI: boolean }) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setNotes([])}>Cancel</Button>
+          <Button onClick={() => setPending(null)}>Cancel</Button>
           <Button
             onClick={() => {
-              const noteCount = notes.length;
-              setNotes([]);
-              void openInStudio(noteCount);
+              if (!pending) return;
+              setPending(null);
+              void openInStudio(pending.rungsText, pending.notes.length);
             }}
             variant="contained"
           >

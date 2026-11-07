@@ -106,6 +106,8 @@ export function diagramToRungs(diagram: Diagram): Conversion {
   const allocateName = (wanted: string): string => {
     let base = wanted
       .normalize("NFKD")
+      // NFKD splits `ó` into `o` and an accent. The accent goes, or it would become `_`.
+      .replace(/\p{M}+/gu, "")
       .replace(/[^A-Za-z0-9_]+/g, "_")
       .replace(/^_+|_+$/g, "");
     if (!base) base = "Tag";

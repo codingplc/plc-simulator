@@ -1,5 +1,5 @@
 // .env.development.local points this at a local Studio while developing.
-const studioUrl = (): string => import.meta.env.VITE_STUDIO_URL || "https://studio.rungs.dev";
+const studioUrl = (): string => (import.meta.env.VITE_STUDIO_URL || "https://studio.rungs.dev").replace(/\/+$/, "");
 
 // The same campaign as every other surface that points at Studio, so they roll up together.
 const trackingParameters = (content: string) =>

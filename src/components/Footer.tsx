@@ -3,6 +3,8 @@ import { FiInfo, FiMail } from "react-icons/fi";
 import { usePostHog } from "@posthog/react";
 import styled from "styled-components";
 
+import { studioHomeLink } from "../rungs/projectLink";
+
 const Container = styled.div`
   background-color: #abcdef;
   bottom: 0;
@@ -17,18 +19,6 @@ const Container = styled.div`
 
 type Props = {
   mobileUI: boolean;
-};
-
-// Successor notice. Campaign matches the empty-canvas notice and the variable
-// table banner so every migration surface rolls up as one campaign.
-const studioUrl = (): string => {
-  const params = new URLSearchParams({
-    utm_source: "plcsimulator.online",
-    utm_medium: "referral",
-    utm_campaign: "successor",
-    utm_content: "app_footer",
-  });
-  return `https://studio.rungs.dev/?${params.toString()}`;
 };
 
 export default function Footer({ mobileUI }: Props) {
@@ -73,7 +63,7 @@ export default function Footer({ mobileUI }: Props) {
       >
         <Typography variant="body2" align="center">
           <Link
-            href={studioUrl()}
+            href={studioHomeLink("app_footer")}
             color="inherit"
             target="_blank"
             rel="noopener noreferrer"

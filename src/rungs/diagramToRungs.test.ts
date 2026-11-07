@@ -144,6 +144,19 @@ describe("diagramToRungs", () => {
     ]);
   });
 
+  it("drops accents from a tag name rather than splitting the word", () => {
+    const diagram = diagramOf(
+      [
+        ["Ventilátor", "Bool"],
+        ["Żółć", "Bool"],
+      ],
+      [],
+    );
+
+    // `ł` is a letter of its own, not an `l` with an accent, so it has nothing to drop.
+    expect(diagramToRungs(diagram).tags.map(({ name }) => name)).toEqual(["Ventilator", "Zo_c"]);
+  });
+
   it("tells a program's own reads and writes apart for tag usage", () => {
     const diagram = diagramOf(
       [
