@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { usePostHog } from "@posthog/react";
 import { LOAD_SAMPLE } from "../../store/types";
 import { studioHomeLink } from "../../rungs/projectLink";
+import StudioVideo from "./StudioVideo";
 
 // Successor notice. Shown on an empty canvas, which is where switching costs the
 // reader nothing — they have not built anything yet. The inline link and the
@@ -31,7 +32,7 @@ export default function DiagramHelp() {
     <Box
       sx={{
         marginX: "auto",
-        maxWidth: "36em",
+        maxWidth: "44em",
         px: 2,
         display: "flex",
         flexDirection: "column",
@@ -49,6 +50,9 @@ export default function DiagramHelp() {
       >
         PLC Simulator Online is moving to Rungs Studio.
       </Typography>
+      <Box sx={{ width: "100%", mb: 2 }}>
+        <StudioVideo surface="empty_canvas" />
+      </Box>
       <Typography
         sx={{
           mb: 1,
